@@ -1,8 +1,14 @@
+---
+title: Focus Performance
+impact: CRITICAL
+tags: focus, performance, re-renders, react-memo, transforms, tv
+---
+
 # Focus Performance
 
 On TV, every D-pad press sends focus change events. Careless handling triggers dozens of component updates per press, tanking your frame rate.
 
-## Key Takeaways
+## Quick Reference
 - Keep focus effects local — don't update global state for visual changes
 - Use `React.memo` to prevent full-row re-renders on focus change
 - Prefer a single top-level focus frame over per-card overlays
@@ -95,7 +101,7 @@ One focus frame moves around — no duplication, minimal re-renders.
    - On Android TV/Fire TV: `focusable` prop reduces extra focus jumps
    - On Apple TV/Android TV/Fire TV: `TVFocusGuideView` to control focus without excessive JS
 
-## Related
-- `focus-management.md` — Core focus APIs and debugging
-- `perf-animations.md` — Animation performance on TV
-- `perf-overview.md` — Overall TV performance strategy
+## Related Skills
+- [focus-management.md](./focus-management.md) — Core focus APIs and debugging
+- [perf-animations.md](./perf-animations.md) — Animation performance on TV
+- [perf-overview.md](./perf-overview.md) — Overall TV performance strategy

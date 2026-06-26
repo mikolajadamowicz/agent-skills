@@ -1,8 +1,14 @@
+---
+title: Testing Strategy for React Native TV Apps
+impact: MEDIUM
+tags: testing, integration-tests, trophy-approach, rntl, focus, tv
+---
+
 # Testing Strategy for React Native TV Apps
 
 Testing TV apps requires a thoughtful approach that considers focus management, device fragmentation, remote control interaction, and performance constraints.
 
-## Key Takeaways
+## Quick Reference
 - Use the **trophy approach** — emphasize integration tests over unit tests
 - Integration tests provide best effect-per-effort ratio for TV apps
 - Shift E2E tests into faster integration tests using RNTL where possible
@@ -87,7 +93,7 @@ Testing doesn't end at deploy:
 - Monitor errors, crashes, performance across device diversity
 - React to issues as they happen with detailed crash reports
 
-## Related
-- `test-javascript.md` — JS test setup and tvRemote helpers
-- `test-e2e.md` — E2E testing with Appium and device farms
-- `perf-overview.md` — Performance KPIs to test
+## Related Skills
+- [test-javascript.md](./test-javascript.md) — JS test setup and tvRemote helpers
+- [test-e2e.md](./test-e2e.md) — E2E testing with Appium and device farms
+- [perf-overview.md](./perf-overview.md) — Performance KPIs to test

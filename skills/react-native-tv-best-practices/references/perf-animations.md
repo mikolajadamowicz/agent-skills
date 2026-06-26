@@ -1,8 +1,14 @@
+---
+title: Animation Performance on TV
+impact: CRITICAL
+tags: animations, reanimated, native-driver, transforms, focus, tv
+---
+
 # Animation Performance on TV
 
 Animations make a TV app feel polished — if they're smooth. On TV hardware, JS-driven animations tank performance fast because the JS thread competes with focus handling, list rendering, and playback controls.
 
-## Key Takeaways
+## Quick Reference
 - **Always use `useNativeDriver: true`** for transforms and opacity
 - Keep focus animations short: 100-150ms
 - Avoid animating layout properties (width, height, margin) — use transforms instead
@@ -71,7 +77,7 @@ JS-driven chains (fade → scale → shadow) cause multiple layout passes.
 
 > When in doubt, animate less. On TV, a fast and crisp focus change beats a slow, fancy effect every time.
 
-## Related
-- `focus-performance.md` — Focus-specific render optimization
-- `perf-overview.md` — Overall performance strategy
-- `perf-lists.md` — List scrolling performance
+## Related Skills
+- [focus-performance.md](./focus-performance.md) — Focus-specific render optimization
+- [perf-overview.md](./perf-overview.md) — Overall performance strategy
+- [perf-lists.md](./perf-lists.md) — List scrolling performance

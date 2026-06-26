@@ -1,8 +1,14 @@
+---
+title: Typography for TV Displays
+impact: HIGH
+tags: typography, fonts, text-size, readability, contrast, tv-design
+---
+
 # Typography for TV Displays
 
 Typography that works on phones fails on TV. Distance, panel tech, ambient light, and OS rendering push designs toward bigger type, clearer spacing, and higher contrast.
 
-## Key Takeaways
+## Quick Reference
 - TV text needs to be **50-80% larger** than mobile equivalents
 - Minimum body text: 24px (not 16px like mobile)
 - Avoid ultra-light/ultra-thin weights — they shimmer on LCDs, bloom on OLEDs
@@ -70,7 +76,7 @@ TVs expose edge cases with subpixel rendering:
 - Optimize for **"at-a-glance" readability**
 - Recommended open-source fonts: Roboto, Noto Sans, Open Sans, DM Sans, Inter
 
-## Related
-- `design-10foot.md` — 10-foot experience design principles
-- `design-color.md` — Color and contrast guidelines
-- `design-layout.md` — Layout and spacing patterns
+## Related Skills
+- [design-10foot.md](./design-10foot.md) — 10-foot experience design principles
+- [design-color.md](./design-color.md) — Color and contrast guidelines
+- [design-layout.md](./design-layout.md) — Layout and spacing patterns

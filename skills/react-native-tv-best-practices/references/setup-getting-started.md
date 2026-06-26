@@ -1,8 +1,14 @@
+---
+title: Getting Started with React Native for TV
+impact: MEDIUM
+tags: setup, react-native-tvos, expo, tvos, android-tv, getting-started
+---
+
 # Getting Started with React Native for TV
 
 React Native for TV is powered by `react-native-tvos`, an independent fork dedicated to TV support. It maintains close parity with React Native core while adding TV-specific APIs.
 
-## Key Takeaways
+## Quick Reference
 - Use `react-native-tvos` as a drop-in replacement for `react-native`
 - Expo SDK 50+ fully supports TV via `@react-native-tvos/config-tv` plugin
 - The fork does NOT prevent building regular iOS/Android mobile apps
@@ -82,12 +88,12 @@ Same as React Native mobile, plus:
 
 | Component / API | TV Changes |
 |----------------|------------|
-| `Platform` | Added `Platform.isTV` and `Platform.isTVOS` |
+| `Platform` | Added `Platform.isTV` (any TV) and `Platform.isTVOS` (Apple TV only). No `isAndroidTV` flag — detect with `Platform.OS === 'android' && Platform.isTV`. Fire TV needs device info (manufacturer), not a `Platform` flag. |
 | `Pressable`, `Touchable*` | Native `onFocus` & `onBlur` events + remote mapping |
 | `Pressable` | `.focus:` and `.active:` Tailwind pseudo classes |
 | `TVEventHandler` / `useTVEventHandler` | Custom remote event handling |
 | `TVFocusGuideView` | Focus management between disconnected areas |
-| `View` | Added `nextFocus*` props for iOS (previously Android-only) |
+| `View` | `nextFocus*` props for directional focus overrides (Cartesian platforms — Android TV, Fire TV, Vega OS — plus tvOS with a caveat; see [focus-management.md](./focus-management.md)) |
 | `VirtualizedList` | Extended for focus management |
 | `BackHandler` | Extended for Apple & Android TV back button |
 | `TVTextScrollView` (Apple TV) | Scrolling via swipe gestures from remote |
@@ -99,6 +105,6 @@ Same as React Native mobile, plus:
 - **Hoppix** — Demo showing spatial navigation on TV
 - **@bamlab/react-tv-space-navigation** — Spatial navigation across platforms
 
-## Related
-- `setup-architecture.md` — Project structure and code sharing
-- `setup-cross-platform.md` — Handling platform differences
+## Related Skills
+- [setup-architecture.md](./setup-architecture.md) — Project structure and code sharing
+- [setup-cross-platform.md](./setup-cross-platform.md) — Handling platform differences

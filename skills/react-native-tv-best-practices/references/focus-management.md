@@ -1,8 +1,14 @@
+---
+title: Focus Management
+impact: CRITICAL
+tags: focus, tvfocusguideview, hastvpreferredfocus, d-pad, focus-traps, tv
+---
+
 # Focus Management
 
 Focus is the core interaction model on TV. Every D-pad press sends focus from one element to another. When focus behaves as expected, users glide through the interface. When it doesn't, they get stuck or overshoot.
 
-## Key Takeaways
+## Quick Reference
 - **Let the platform focus engine handle it** — design layouts that are naturally focus-friendly before adding manual focus logic
 - Use `TVFocusGuideView` for complex layouts that don't naturally connect
 - Use `hasTVPreferredFocus` to set initial focus on screen load
@@ -94,9 +100,11 @@ useEffect(() => {
 
 **Prefer focusing a stable container** (e.g., a `TVFocusGuideView`) rather than a granular element.
 
-## Avoid nextFocus* Props for Cross-Platform
+## nextFocus* Props
 
-`nextFocusUp`, `nextFocusDown`, etc. work on Android TV but are **ignored on tvOS**. For shared codebases, rely on inferred behavior or `TVFocusGuideView` instead.
+`nextFocusUp`, `nextFocusDown`, `nextFocusLeft`, `nextFocusRight` set on `View` are honored natively by the **directional (Cartesian) focus engines** — Android TV, Fire TV, and Vega OS — and also by **tvOS** in current `react-native-tvos`. The tvOS caveat: if there is no focusable view in the specified direction, the override is ignored and the engine falls back to inferred (spatial) focus.
+
+**Default rule:** prefer natural focus order and `TVFocusGuideView` for complex or shared layouts. Reach for `nextFocus*` only as a targeted override when that tvOS caveat is acceptable — not as the primary navigation strategy.
 
 ## Debugging Focus Issues
 
@@ -140,7 +148,7 @@ useEffect(() => {
 | Gaps between elements | Use `TVFocusGuideView` to bridge them |
 | Wrong initial focus | Only one `hasTVPreferredFocus` per view; wait for UI to render |
 
-## Related
-- `focus-performance.md` — Performance impact of focus changes
-- `nav-directional.md` — Directional navigation fundamentals
-- `nav-patterns.md` — Navigation patterns and focus restoration
+## Related Skills
+- [focus-performance.md](./focus-performance.md) — Performance impact of focus changes
+- [nav-directional.md](./nav-directional.md) — Directional navigation fundamentals
+- [nav-patterns.md](./nav-patterns.md) — Navigation patterns and focus restoration

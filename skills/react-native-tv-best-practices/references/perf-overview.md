@@ -1,8 +1,14 @@
+---
+title: Performance Overview for TV
+impact: HIGH
+tags: performance, device-tiers, kpis, startup, hardware, tv
+---
+
 # Performance Overview for TV
 
 TV hardware is significantly weaker than modern phones. A 65" TV is often closer to a budget Android phone in CPU/GPU terms — while also decoding 4K video.
 
-## Key Takeaways
+## Quick Reference
 - **Golden Rule:** Design for the weakest device, make it feel like the fastest one
 - Optimize from day one, not as a pre-release checkbox
 - Always keep a low-end streaming stick in your dev kit
@@ -88,9 +94,9 @@ AppRegistry.registerComponent(appName, () => {
 - Push metrics to Grafana/Datadog for trend tracking
 - Fail CI if metrics regress beyond thresholds
 
-## Related
-- `perf-animations.md` — Animation performance
-- `perf-lists.md` — List virtualization
-- `perf-network.md` — Network optimization
-- `perf-memory.md` — Memory management
-- `focus-performance.md` — Focus-related performance
+## Related Skills
+- [perf-animations.md](./perf-animations.md) — Animation performance
+- [perf-lists.md](./perf-lists.md) — List virtualization
+- [perf-network.md](./perf-network.md) — Network optimization
+- [perf-memory.md](./perf-memory.md) — Memory management
+- [focus-performance.md](./focus-performance.md) — Focus-related performance

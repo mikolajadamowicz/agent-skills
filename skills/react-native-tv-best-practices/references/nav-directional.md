@@ -1,8 +1,14 @@
+---
+title: Directional Navigation Fundamentals
+impact: CRITICAL
+tags: navigation, directional, focus-engine, d-pad, spatial-navigation, tv
+---
+
 # Directional Navigation Fundamentals
 
 Every TV app starts with a simple question: where does the focus go next? When a viewer presses an arrow on the remote, the app must decide which element becomes active.
 
-## Key Takeaways
+## Quick Reference
 - TV navigation is fundamentally physical — each button press is deliberate
 - Platform focus engines differ: tvOS uses spatial inference, Android TV uses proximity, web-based TVs need JS libraries
 - Design layouts that work with the focus engine, not against it
@@ -77,7 +83,7 @@ Each platform builds a focus tree — an internal map of all focusable elements.
 - **Plan focus transitions:** Define where focus starts, how "back" behaves, what regains focus on return
 - **Shallow hierarchy:** Too many layers makes users lose their bearings
 
-## Related
-- `focus-management.md` — TVFocusGuideView, hasTVPreferredFocus, debugging
-- `nav-patterns.md` — Drawer, tabs, modals, back navigation
-- `design-layout.md` — Layout patterns that support natural focus flow
+## Related Skills
+- [focus-management.md](./focus-management.md) — TVFocusGuideView, hasTVPreferredFocus, debugging
+- [nav-patterns.md](./nav-patterns.md) — Drawer, tabs, modals, back navigation
+- [design-layout.md](./design-layout.md) — Layout patterns that support natural focus flow

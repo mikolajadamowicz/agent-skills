@@ -15,12 +15,18 @@ Guidance for building high-quality, performant TV experiences with React Native 
 
 For general (non-TV) React Native performance, see the [react-native-best-practices](../react-native-best-practices/SKILL.md) skill — this skill re-frames those concerns around TV hardware and focus-driven navigation.
 
-## Before You Start
+## Before You Start — Identify the TV Stack
 
-Verify the developer's setup:
-1. **react-native-tvos** is installed (`"react-native": "npm:react-native-tvos@latest"` in package.json)
-2. **Platform targets** are configured (Android TV manifest entries, tvOS Podfile, Expo TV plugin)
-3. **Development environment** has TV emulators/simulators set up
+This skill covers several TV stacks. **Detect which one the app targets before flagging setup issues** — demanding `react-native-tvos`, a tvOS Podfile, or an Android TV manifest on a Vega/Kepler or web-based TV app produces false positives.
+
+| Stack | How to detect | Setup expectations |
+|-------|---------------|--------------------|
+| **react-native-tvos** (Apple TV, Android TV, Fire TV) | `"react-native": "npm:react-native-tvos@…"` in package.json | tvOS Podfile (`platform :tvos`); Android TV `leanback`/`LEANBACK_LAUNCHER` manifest entries; TV emulator/simulator |
+| **Expo + react-native-tvos** | above **plus** `@react-native-tvos/config-tv` in app.json | `EXPO_TV=1` prebuild; `react-native-tvos` version must match the Expo SDK; not all Expo features/libraries are available on TV |
+| **Amazon Vega / Kepler** | Vega/Kepler SDK & tooling (`@amazon-devices/*` deps, Kepler manifest); **no** `react-native-tvos` | Amazon's Vega/Kepler toolchain — `react-native-tvos`, tvOS Podfile, and Android TV manifest do **not** apply |
+| **Web-based TV** (Tizen, webOS) | web bundler (Rsbuild/webpack) + platform packaging; spatial-nav library | Platform SDK packaging; `@noriginmedia/norigin-spatial-navigation` for focus |
+
+The focus, 10-foot design, performance, accessibility, and player guidance applies across all of these — only the **setup/build** expectations are stack-specific.
 
 ## Key Principles
 
@@ -87,22 +93,11 @@ There is no touch on TV — only the D-pad (up/down/left/right/select/back). Let
 | "CI pipeline takes hours" | [release-cicd.md](references/release-cicd.md) → Fingerprinting |
 | "How to share code across platforms" | [setup-architecture.md](references/setup-architecture.md) → Code sharing |
 
-## Searching References
+## Security (TV-Specific)
 
-```bash
-grep -l "focus" references/
-grep -l "TVFocusGuideView" references/
-grep -l "DRM" references/
-grep -l "flashlist" references/
-```
-
-## Security
-
-- Always verify shell commands before running them.
-- Pin dependency versions explicitly. Audit before installing new packages.
-- Handle DRM tokens and license servers securely — never expose keys in client code.
-- Use HTTPS for all network requests (manifests, licenses, API calls).
-- Validate user input for search, forms, and keyboard interactions.
+General dependency/input hygiene applies as in any RN app; the TV-specific deltas worth calling out:
+- Never embed FairPlay/Widevine/PlayReady keys in client code — treat the license server as the trust boundary and keep DRM tokens server-issued.
+- Use HTTPS for manifests, license requests, and player API calls (required by most platform DRM paths).
 
 ## Attribution
 

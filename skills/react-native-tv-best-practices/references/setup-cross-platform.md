@@ -1,8 +1,14 @@
+---
+title: Handling Cross-Platform Inconsistencies
+impact: HIGH
+tags: cross-platform, platform-detection, platform-select, spatial-navigation, tv
+---
+
 # Handling Cross-Platform Inconsistencies
 
 When building for both mobile and TV, small platform differences add up. Centralize platform-specific logic and leverage libraries with built-in platform support.
 
-## Key Takeaways
+## Quick Reference
 - Use `Platform.isTV` for conditional TV logic
 - Use platform-specific file extensions for drastically different UI
 - Abstract platform-specific styles with `Platform.select()`
@@ -50,15 +56,15 @@ Check if a library already addresses your cross-platform needs before building c
 - **@bamlab/react-tv-space-navigation** — Spatial navigation across TV platforms
 - **@noriginmedia/norigin-spatial-navigation** — For web-based TV platforms
 
-## Avoid nextFocus* for Cross-Platform
+## nextFocus* for Cross-Platform
 
-`nextFocusUp`, `nextFocusDown`, etc. only work on Android TV — ignored on tvOS. For shared codebases, use `TVFocusGuideView` and inferred focus behavior instead.
+`nextFocusUp`, `nextFocusDown`, etc. on `View` are honored by the **Cartesian focus engines** (Android TV, Fire TV, Vega OS) and by **tvOS** — with a tvOS caveat: the override is ignored when no focusable view exists in that direction. For shared codebases, prefer `TVFocusGuideView` and inferred focus as the default, and use `nextFocus*` only as a targeted override where that caveat is acceptable. See [focus-management.md](./focus-management.md) for the full rule.
 
 ## react-native-tvos Compatibility
 
 The `react-native-tvos` fork does not prevent mobile builds. It extends core with TV-specific features while maintaining API compatibility. Mobile app logic stays intact.
 
-## Related
-- `setup-getting-started.md` — Project setup
-- `setup-architecture.md` — Code sharing strategies
-- `focus-management.md` — Cross-platform focus handling
+## Related Skills
+- [setup-getting-started.md](./setup-getting-started.md) — Project setup
+- [setup-architecture.md](./setup-architecture.md) — Code sharing strategies
+- [focus-management.md](./focus-management.md) — Cross-platform focus handling

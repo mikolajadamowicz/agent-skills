@@ -1,8 +1,14 @@
+---
+title: End-to-End Testing for TV Apps
+impact: MEDIUM
+tags: e2e, appium, webdriverio, device-farms, tvos, android-tv
+---
+
 # End-to-End Testing for TV Apps
 
 For full behavioral testing, Appium is the best option for React Native TV. It supports Android TV and Apple TV via UIAutomator and XCUITest. Web-based platforms test through browser automation.
 
-## Key Takeaways
+## Quick Reference
 - Use Appium + WebdriverIO for native TV platforms
 - Use `driver.pressKeyCode` to simulate D-pad navigation
 - Use accessibility labels as selectors (`~home-button`)
@@ -118,7 +124,7 @@ aws devicefarm schedule-run \
 - Web-based TVs run custom browser forks — never exact match in automated tests
 - For platform-specific quirks, real devices are the only reliable test
 
-## Related
-- `test-strategy.md` — Overall testing approach
-- `test-javascript.md` — JS-level tests with tvRemote helpers
-- `release-cicd.md` — CI/CD pipeline integration
+## Related Skills
+- [test-strategy.md](./test-strategy.md) — Overall testing approach
+- [test-javascript.md](./test-javascript.md) — JS-level tests with tvRemote helpers
+- [release-cicd.md](./release-cicd.md) — CI/CD pipeline integration

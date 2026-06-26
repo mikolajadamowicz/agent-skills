@@ -1,8 +1,14 @@
+---
+title: Navigation Patterns
+impact: CRITICAL
+tags: navigation, drawer, tabs, modals, back-navigation, focus-restoration, tv
+---
+
 # Navigation Patterns
 
 TV navigation uses two layers: global navigation (between sections) and local navigation (within sections). The goal is predictable navigation — users should reach content with minimal button presses and no confusion.
 
-## Key Takeaways
+## Quick Reference
 - Use drawer for global navigation, tabs for local navigation
 - Always restore focus when returning from modals/overlays
 - Keep the back button behavior consistent: each press = one layer back
@@ -130,7 +136,7 @@ const Tab = createBottomTabNavigator();
 </Tab.Navigator>
 ```
 
-## Related
-- `focus-management.md` — TVFocusGuideView, focus traps
-- `nav-directional.md` — How focus engines work
-- `nav-keyboard.md` — Keyboard handling on TV
+## Related Skills
+- [focus-management.md](./focus-management.md) — TVFocusGuideView, focus traps
+- [nav-directional.md](./nav-directional.md) — How focus engines work
+- [nav-keyboard.md](./nav-keyboard.md) — Keyboard handling on TV

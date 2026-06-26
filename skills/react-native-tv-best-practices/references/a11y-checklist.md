@@ -1,3 +1,9 @@
+---
+title: Accessibility Checklist for TV Apps
+impact: MEDIUM
+tags: accessibility, checklist, screen-reader, captions, focus, tv
+---
+
 # Accessibility Checklist for TV Apps
 
 Complete pre-launch checklist. Use the "move-left approach" — integrate accessibility from the start of development.
@@ -77,7 +83,7 @@ Complete pre-launch checklist. Use the "move-left approach" — integrate access
 | React Native Testing Library | Integration | Test accessibility props/labels |
 | Accessibility Inspector | Manual | Xcode (tvOS) |
 
-## Related
-- `a11y-overview.md` — Accessibility fundamentals
-- `a11y-implementation.md` — Implementation details
-- `design-color.md` — Color contrast guidelines
+## Related Skills
+- [a11y-overview.md](./a11y-overview.md) — Accessibility fundamentals
+- [a11y-implementation.md](./a11y-implementation.md) — Implementation details
+- [design-color.md](./design-color.md) — Color contrast guidelines

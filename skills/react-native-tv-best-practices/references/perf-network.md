@@ -1,8 +1,14 @@
+---
+title: Network Performance on TV
+impact: HIGH
+tags: network, prefetching, caching, optimistic-ui, payloads, tv
+---
+
 # Network Performance on TV
 
 On TV, there's no "loading spinner safety net." People expect content to instantly fill the screen. If nothing happens after a remote press, they'll assume the app froze — and press again (duplicate requests).
 
-## Key Takeaways
+## Quick Reference
 - Show something within 200ms of navigation — even a blurred poster or placeholder
 - Prefetch the next likely screen while current one is stable
 - Never block navigation/focus on network responses
@@ -67,7 +73,7 @@ Hides network latency during fast remote presses.
 
 > Optimize first paint time, not just throughput. Show something within 200ms of navigation.
 
-## Related
-- `perf-overview.md` — Overall performance strategy
-- `perf-memory.md` — Memory impact of caching
-- `perf-lists.md` — Virtualized list rendering
+## Related Skills
+- [perf-overview.md](./perf-overview.md) — Overall performance strategy
+- [perf-memory.md](./perf-memory.md) — Memory impact of caching
+- [perf-lists.md](./perf-lists.md) — Virtualized list rendering

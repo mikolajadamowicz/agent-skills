@@ -1,8 +1,14 @@
+---
+title: Layout Patterns and Common Components
+impact: HIGH
+tags: layout, cards, swimlanes, safe-zones, overscan, responsive, tv-design
+---
+
 # Layout Patterns and Common Components
 
 TV interfaces share a common structure: hero section at top, rows of content below, menu on the side. Familiarity reduces cognitive effort and lets users focus on content.
 
-## Key Takeaways
+## Quick Reference
 - A well-designed layout provides: Orientation (where am I?), Context (what can I do?), Momentum (where can I go?)
 - Use safe zones (5-10% margin) to prevent overscan clipping
 - Use relative units, not fixed pixels, for responsive TV design
@@ -96,7 +102,7 @@ TVs range from 32" to 85" and don't all render pixels identically:
 - Invisible baselines for text/components keep focus transitions smooth
 - TV design prioritizes clarity over space efficiency
 
-## Related
-- `design-10foot.md` — 10-foot experience principles
-- `design-typography.md` — Text sizing and readability
-- `perf-lists.md` — List virtualization for performance
+## Related Skills
+- [design-10foot.md](./design-10foot.md) — 10-foot experience principles
+- [design-typography.md](./design-typography.md) — Text sizing and readability
+- [perf-lists.md](./perf-lists.md) — List virtualization for performance

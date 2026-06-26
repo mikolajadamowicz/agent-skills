@@ -1,8 +1,14 @@
+---
+title: The 10-Foot Experience
+impact: HIGH
+tags: 10-foot, tv-design, remote, focus, navigation, feedback
+---
+
 # The 10-Foot Experience
 
 When you move ten feet away from the screen, everything changes: text size, button targets, visual attention, and interaction models.
 
-## Key Takeaways
+## Quick Reference
 - Everything must be legible from 3 meters (10 feet) away
 - Use bold shapes, generous spacing, strong contrast
 - Every button press must produce immediate visual feedback
@@ -65,7 +71,7 @@ When a screen feels complete, test it the way users will:
 
 If something feels awkward, simplify the layout and reduce the number of focusable elements.
 
-## Related
-- `design-layout.md` — Layout patterns, safe zones, component design
-- `design-typography.md` — Text sizing for distance
-- `design-color.md` — Contrast and color for TV displays
+## Related Skills
+- [design-layout.md](./design-layout.md) — Layout patterns, safe zones, component design
+- [design-typography.md](./design-typography.md) — Text sizing for distance
+- [design-color.md](./design-color.md) — Contrast and color for TV displays

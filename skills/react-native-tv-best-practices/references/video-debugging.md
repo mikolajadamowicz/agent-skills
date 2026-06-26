@@ -1,8 +1,14 @@
+---
+title: Debugging Video Streams
+impact: HIGH
+tags: video, debugging, ffmpeg, ffprobe, charles, proxyman, profiling
+---
+
 # Debugging Video Streams
 
 Video debugging requires specialized tools for media analysis, network inspection, and platform-specific behavior.
 
-## Key Takeaways
+## Quick Reference
 - Use FFmpeg/ffprobe to inspect media properties and verify codec compatibility
 - Charles Proxy or Proxyman for network traffic analysis
 - Correlate client-side errors with server-side telemetry
@@ -53,7 +59,7 @@ Chrome DevTools plugin with network inspection tab for React Native apps.
 | React Native Profiler | UI performance |
 | Hermes Profiler | JS thread analysis |
 
-## Related
-- `video-streaming.md` — Streaming architecture
-- `video-players.md` — Player implementations
-- `perf-overview.md` — Overall performance strategy
+## Related Skills
+- [video-streaming.md](./video-streaming.md) — Streaming architecture
+- [video-players.md](./video-players.md) — Player implementations
+- [perf-overview.md](./perf-overview.md) — Overall performance strategy

@@ -1,8 +1,14 @@
+---
+title: Codebase Architecture and Sharing
+impact: MEDIUM
+tags: architecture, code-sharing, monorepo, platform-extensions, cross-platform, tv
+---
+
 # Codebase Architecture and Sharing
 
 The choice of structure depends on your project's scope and whether your app is part of a larger multi-platform product.
 
-## Key Takeaways
+## Quick Reference
 - Monorepo is the most common structure for TV apps (platforms require bundled applications)
 - 60-80% of mobile React Native code can typically be reused for TV
 - Share business logic, state, hooks, API layers; customize UI per platform
@@ -132,7 +138,7 @@ Put web-native code in `web/` folder. Use Rsbuild (or your preferred bundler) fo
 
 Standalone setup using React Native 0.72 (React 18). Follow official Vega OS docs. Code sharing may be limited by React 18/19 API differences.
 
-## Related
-- `setup-getting-started.md` — Project creation and dependencies
-- `setup-cross-platform.md` — Handling platform inconsistencies
-- `release-cicd.md` — CI/CD for multi-platform TV apps
+## Related Skills
+- [setup-getting-started.md](./setup-getting-started.md) — Project creation and dependencies
+- [setup-cross-platform.md](./setup-cross-platform.md) — Handling platform inconsistencies
+- [release-cicd.md](./release-cicd.md) — CI/CD for multi-platform TV apps

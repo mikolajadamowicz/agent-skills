@@ -1,8 +1,14 @@
+---
+title: "Lists and Grids: Virtualization Is Mandatory"
+impact: CRITICAL
+tags: lists, grids, virtualization, flashlist, flatlist, tv
+---
+
 # Lists and Grids: Virtualization Is Mandatory
 
 TV UIs are grids of lists inside lists. Home screens have 10-15 rows with 10-20 items each. Without virtualization, your app will be unusable on TV hardware.
 
-## Key Takeaways
+## Quick Reference
 - **Always virtualize** — Use FlashList or RecyclerListView, not ScrollView
 - FlashList is faster and more memory-efficient than FlatList for large datasets
 - Keep list items lightweight — avoid deep nesting, heavy shadows/gradients
@@ -72,7 +78,7 @@ If you must use FlatList, use all optimization props:
 - **webOS:** Scrolling performance drops if images aren't decoded yet — preload 1-2 screens ahead.
 - **Apple TV:** Generally smoothest rendering, but older models still choke on giant grids.
 
-## Related
-- `perf-overview.md` — Overall performance strategy
-- `perf-memory.md` — Image and memory optimization
-- `design-layout.md` — Row/card layout patterns
+## Related Skills
+- [perf-overview.md](./perf-overview.md) — Overall performance strategy
+- [perf-memory.md](./perf-memory.md) — Image and memory optimization
+- [design-layout.md](./design-layout.md) — Row/card layout patterns

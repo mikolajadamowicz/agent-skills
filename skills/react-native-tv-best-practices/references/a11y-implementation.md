@@ -1,12 +1,18 @@
+---
+title: Accessibility Implementation in React Native TV
+impact: HIGH
+tags: accessibility, screen-reader, focus, voiceover, talkback, tv
+---
+
 # Accessibility Implementation in React Native TV
 
 Practical guide to implementing accessibility across TV platforms with code examples for common patterns.
 
-## Key Takeaways
+## Quick Reference
 - Set `accessible={true}` on all interactive elements
 - Every focusable element needs `accessibilityLabel` + `accessibilityRole`
 - Use `accessibilityLiveRegion="polite"` for dynamic content updates
-- Use `TVFocusGuideView` for cross-platform focus management (not `nextFocus*`)
+- Prefer `TVFocusGuideView` for cross-platform focus management; use `nextFocus*` only as a targeted override
 - Test on real devices with screen readers enabled
 
 ## Making Elements Accessible
@@ -156,15 +162,19 @@ useEffect(() => {
 }, []);
 ```
 
-## Cross-Platform Focus (Avoid nextFocus*)
+## Cross-Platform Focus
 
-`nextFocus*` props only work on Android TV. Use `TVFocusGuideView` for cross-platform:
+Prefer `TVFocusGuideView` over `nextFocus*` for shared layouts. `destinations` takes an array of component **refs** (not string IDs):
 ```jsx
-<TVFocusGuideView autoFocus destinations={['button1', 'button2']}>
-  <TouchableOpacity nativeID="button1" ... />
-  <TouchableOpacity nativeID="button2" ... />
+const playRef = useRef(null);
+const infoRef = useRef(null);
+
+<TVFocusGuideView autoFocus destinations={[playRef, infoRef]}>
+  <TouchableOpacity ref={playRef} accessibilityRole="button" accessibilityLabel="Play" />
+  <TouchableOpacity ref={infoRef} accessibilityRole="button" accessibilityLabel="Info" />
 </TVFocusGuideView>
 ```
+See [focus-management.md](./focus-management.md) for when `nextFocus*` overrides are acceptable.
 
 ## Common Pitfalls
 
@@ -177,7 +187,7 @@ useEffect(() => {
 | Custom components inaccessible | Add `accessible`, role, state, label to all custom components |
 | Visual-only feedback | Pair with `announceForAccessibility()` |
 
-## Related
-- `a11y-overview.md` — Accessibility fundamentals for TV
-- `a11y-checklist.md` — Pre-launch checklist
-- `focus-management.md` — Focus APIs
+## Related Skills
+- [a11y-overview.md](./a11y-overview.md) — Accessibility fundamentals for TV
+- [a11y-checklist.md](./a11y-checklist.md) — Pre-launch checklist
+- [focus-management.md](./focus-management.md) — Focus APIs

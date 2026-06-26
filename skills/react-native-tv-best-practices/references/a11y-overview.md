@@ -1,12 +1,18 @@
+---
+title: Accessibility on TV Overview
+impact: MEDIUM
+tags: accessibility, a11y, screen-readers, focus, d-pad, talkback, voiceover
+---
+
 # Accessibility on TV — Overview
 
-Accessibility means making digital content available and usable by everyone. On TV, this is essential — screens are shared spaces used by people of all ages, abilities, and contexts.
+What's different about accessibility on TV versus mobile/web — the deltas you can't infer from general React Native a11y knowledge. For prop usage and patterns see [a11y-implementation.md](./a11y-implementation.md); for the audit list see [a11y-checklist.md](./a11y-checklist.md). WCAG/POUR and the legal baseline (ADA, Section 508, EN 301 549) apply to TV exactly as to mobile/web — treat a11y as a requirement, not a nice-to-have.
 
-## Key Takeaways
-- Accessibility is a legal requirement in most countries (ADA, Section 508, EN 301 549)
-- TV accessibility differs from mobile/web: D-pad navigation, focus-driven UI, viewing distance
+## Quick Reference
+- TV accessibility differs from mobile/web on three axes: D-pad navigation, focus-driven UI, and viewing distance
+- Focus management *is* the primary a11y surface on TV — there is no touch fallback
 - Screen readers: TalkBack (Android TV), VoiceOver (Apple TV), VoiceView (Fire TV)
-- Behavior is NOT consistent across platforms — test on each
+- Behavior is NOT consistent across platforms — test on each device, not just one
 
 ## Why TV Accessibility Is Unique
 
@@ -18,13 +24,6 @@ Accessibility means making digital content available and usable by everyone. On 
 | Text Scaling | Limited; fixed layout | Dynamic type | CSS zoom |
 | Contrast | Critical (viewing distance) | Important | Important |
 | Gestures | Not applicable | Swipe, pinch | Keyboard, mouse |
-
-## WCAG Standards (POUR Principles)
-
-- **Perceivable** — Content via text, audio, or sensory alternatives
-- **Operable** — UI usable via keyboard or remote
-- **Understandable** — Content clear and predictable
-- **Robust** — Works with assistive tools
 
 ## Platform Screen Readers
 
@@ -40,19 +39,9 @@ Accessibility means making digital content available and usable by everyone. On 
 - **Apple TV (VoiceOver):** Focus can jump non-linearly. `accessibilityHint` read immediately after label. Role mapping consistent with iOS.
 - **Android TV (TalkBack):** Linear D-pad navigation. `accessibilityHint` sometimes skipped unless `accessible={true}` is explicit.
 
-## React Native Accessibility Props
+The standard React Native accessibility props (`accessible`, `accessibilityLabel`, `accessibilityRole`, `accessibilityState`, `accessibilityLiveRegion`, `accessibilityViewIsModal`) behave the same on TV — see [a11y-implementation.md](./a11y-implementation.md) for TV-specific usage and the platform quirks above for where they diverge.
 
-| Prop | Purpose |
-|------|---------|
-| `accessible={true}` | Makes element recognizable by screen readers |
-| `accessibilityLabel` | Spoken name/title |
-| `accessibilityHint` | What happens on interaction |
-| `accessibilityRole` | What the element is (button, header, image, etc.) |
-| `accessibilityState` | Current state (busy, selected, expanded, disabled, checked) |
-| `accessibilityLiveRegion` | Announce dynamic content changes ("polite", "assertive") |
-| `accessibilityViewIsModal` | Trap screen reader focus in modal |
-
-## Related
-- `a11y-implementation.md` — Detailed implementation guide
-- `a11y-checklist.md` — Pre-launch checklist
-- `design-color.md` — Contrast requirements
+## Related Skills
+- [a11y-implementation.md](./a11y-implementation.md) — Detailed implementation guide
+- [a11y-checklist.md](./a11y-checklist.md) — Pre-launch checklist
+- [design-color.md](./design-color.md) — Contrast requirements

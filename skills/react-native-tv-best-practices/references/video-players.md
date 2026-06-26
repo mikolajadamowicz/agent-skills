@@ -1,8 +1,14 @@
+---
+title: Video Players for React Native TV
+impact: HIGH
+tags: video, players, react-native-video, exoplayer, avplayer, shaka, drm
+---
+
 # Video Players for React Native TV
 
 From simple playback with react-native-video to enterprise-grade streaming with Shaka Player — choose the right level of abstraction for your needs.
 
-## Key Takeaways
+## Quick Reference
 - `react-native-video` covers most use cases (HLS/MP4, basic DRM, built-in controls)
 - For enterprise-grade (live sports, complex DRM, custom ABR): consider Shaka Player or native players
 - Custom controls: add a ref to Video component and build React Native UI on top
@@ -114,7 +120,7 @@ Shaka supports DASH + HLS, offline playback, and custom ABR logic. Runs in React
 | Enterprise multi-DRM, live sports | Shaka Player or native players |
 | Web-based TVs (Tizen, webOS) | Shaka Player, hls.js, or dash.js |
 
-## Related
-- `video-streaming.md` — Streaming architecture and protocols
-- `video-debugging.md` — Debugging tools
-- `focus-management.md` — Focus handling during playback
+## Related Skills
+- [video-streaming.md](./video-streaming.md) — Streaming architecture and protocols
+- [video-debugging.md](./video-debugging.md) — Debugging tools
+- [focus-management.md](./focus-management.md) — Focus handling during playback

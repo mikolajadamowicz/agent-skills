@@ -1,8 +1,14 @@
+---
+title: Memory Management on TV
+impact: HIGH
+tags: memory, ram, image-optimization, garbage-collection, tv-performance
+---
+
 # Memory Management on TV
 
 On TVs, you're sharing RAM with the OS, video decoder, DRM, audio buffers, and even the live TV tuner. Your UI runs in the leftovers.
 
-## Key Takeaways
+## Quick Reference
 - Many devices have 1-1.5 GB total — your app might only get 300-500 MB
 - 4K video streams eat 100-200 MB just for decoded frames
 - Image optimization is the #1 memory lever
@@ -64,7 +70,7 @@ Even with virtualization, if row components keep large objects in state (full me
 - **Tizen/webOS:** Aggressive OS memory reclaim — your app can be killed without warning.
 - **Apple TV 4K:** More generous RAM (4 GB) but don't assume you can skip optimization.
 
-## Related
-- `perf-overview.md` — Overall performance strategy
-- `perf-lists.md` — Virtualized lists reduce memory
-- `perf-network.md` — Caching and payload optimization
+## Related Skills
+- [perf-overview.md](./perf-overview.md) — Overall performance strategy
+- [perf-lists.md](./perf-lists.md) — Virtualized lists reduce memory
+- [perf-network.md](./perf-network.md) — Caching and payload optimization

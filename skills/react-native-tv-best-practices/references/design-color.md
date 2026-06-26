@@ -1,8 +1,14 @@
+---
+title: Color and Contrast for TV Displays
+impact: MEDIUM
+tags: color, contrast, hdr, palette, accessibility, tv-design
+---
+
 # Color and Contrast for TV Displays
 
 Color systems that work on phones can wash out or over-glow on TV. Distance, panel technology, ambient light, and HDR all affect how colors appear.
 
-## Key Takeaways
+## Quick Reference
 - Aim for ≥4.5:1 contrast ratio for normal text, ≥7:1 for core UI
 - Avoid pure white (#FFFFFF) on pure black (#000000) for entire screens — causes eye fatigue
 - Focus indicators need multi-cue: color + border/outline + mild scale
@@ -60,7 +66,7 @@ Consider various TV display technologies:
 - **Color-based information:** Never rely solely on color to convey information — add text labels
 - **Test on multiple devices** and color spaces — viewing in real life matters
 
-## Related
-- `design-typography.md` — Text sizing and readability
-- `design-10foot.md` — 10-foot experience principles
-- `a11y-implementation.md` — Accessible color and contrast
+## Related Skills
+- [design-typography.md](./design-typography.md) — Text sizing and readability
+- [design-10foot.md](./design-10foot.md) — 10-foot experience principles
+- [a11y-implementation.md](./a11y-implementation.md) — Accessible color and contrast

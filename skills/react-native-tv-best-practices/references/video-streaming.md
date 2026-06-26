@@ -1,53 +1,35 @@
-# Video Streaming Fundamentals
+---
+title: Video Streaming on TV
+impact: HIGH
+tags: video, streaming, drm, hls, dash, widevine, fairplay, tv-platforms
+---
 
-Most TV apps are built around video streaming. Understanding the architecture — from protocols to DRM — helps you debug the parts you control.
+# Video Streaming on TV — What's Different
 
-## Key Takeaways
-- Adaptive Bitrate Streaming (ABR) adjusts quality based on bandwidth in real-time
-- HLS (Apple) and DASH (industry standard) are the two dominant protocols
-- DRM is non-negotiable: Widevine (Google), FairPlay (Apple), PlayReady (Microsoft)
-- Your CDN, encoding, and DRM are usually already chosen — understand the stack to debug effectively
+ABR, HLS/DASH, and DRM work the same on TV as anywhere else — this reference assumes you know them and focuses on the TV-specific constraints that bite: which DRM/protocol pairs each TV platform supports, and the hardware limits of weak TV silicon.
 
-## Streaming Architecture
+## Quick Reference
+- The protocol/DRM pairing is dictated by the **target TV platform**, not by preference — pick per platform (table below)
+- TV hardware constraints are the real difference: limited decoders, mandatory **hardware-backed** DRM security levels, and memory shared with the video buffer
+- Your CDN, encoding, and DRM are usually already chosen — your job is to wire the player and debug the device-specific failures
 
-Every streaming pipeline has these layers:
-1. **Content Source** — Raw content: live feeds, VOD assets, CDN files
-2. **Protocol Layer** — HLS or DASH, breaking video into chunks with a manifest
-3. **Player Abstraction** — AVPlayer, ExoPlayer, react-native-video, Shaka Player
-4. **DRM Abstraction** — Widevine, FairPlay, PlayReady with key exchange
-5. **UI Layer** — Controls: play/pause, seekbar, error screens
+## Pick DRM/Protocol by TV Platform
 
-## Adaptive Bitrate Streaming (ABR)
+| Platform | Native player | DRM | Protocol |
+|----------|---------------|-----|----------|
+| Apple TV (tvOS) | AVPlayer | FairPlay | HLS |
+| Android TV / Google TV | ExoPlayer | Widevine | DASH (or HLS) |
+| Fire TV | ExoPlayer | Widevine (PlayReady on some SKUs) | DASH |
+| webOS / Tizen | platform web player | Widevine / PlayReady | DASH (HLS varies) |
 
-How ABR works:
-1. **Segmentation:** Video divided into small segments (few seconds), each at multiple bitrates
-2. **Manifest file:** M3U8 (HLS) or MPD (DASH) lists available bitrates and segment URLs
-3. **Initial playback:** Player requests average bitrate to gauge conditions
-4. **Monitoring:** Player continuously monitors network speed and buffer levels
-5. **Adjustment:** High bandwidth → higher bitrate; low bandwidth → lower bitrate
+A cross-platform app typically ships **both** an HLS+FairPlay path (Apple) and a DASH+Widevine path (everything else); plan the encode/packaging for both.
 
-## Protocols
+## TV Hardware Constraints That Bite
+- **Security level is enforced in hardware.** Widevine L1 / FairPlay require hardware-backed decryption for HD/4K; low-end SKUs may only offer L3 (SD-capped). Detect and degrade gracefully rather than failing playback.
+- **Decoders are limited and shared.** A TV may decode one 4K stream at a time; trailers + main content can contend. Tear down players you aren't using.
+- **Memory is shared with the video buffer** — see [perf-memory.md](./perf-memory.md). Oversized buffers on a 1–2 GB device cause OOM, not just jank.
 
-### HLS (HTTP Live Streaming)
-Apple's protocol. Go-to for iOS, tvOS, Safari. Uses M3U8 manifest files.
-
-### DASH (Dynamic Adaptive Streaming over HTTP)
-Industry standard. Works across platforms. Uses MPD manifest files.
-
-Both break video into segments delivered over HTTP.
-
-## Digital Rights Management (DRM)
-
-| DRM | Provider | Platforms | Protocol Support |
-|-----|----------|-----------|-----------------|
-| Widevine | Google | Android, Chrome | DASH, HLS |
-| FairPlay | Apple | iOS, tvOS, Safari | HLS |
-| PlayReady | Microsoft | Windows, Xbox | DASH, HLS, Smooth Streaming |
-
-Each DRM requires:
-- A valid license server
-- App entitlements/permissions
-- Sometimes native player configuration (security level, hardware decryption)
+DRM in any case requires a valid license server, app entitlements/permissions, and sometimes native player configuration (security level, hardware decryption).
 
 ## Video Player Lifecycle
 
@@ -59,6 +41,6 @@ Each DRM requires:
 6. **License renewal** — Periodic renewal if time-limited
 7. **Cleanup** — Session termination on playback end
 
-## Related
-- `video-players.md` — Player implementations and custom controls
-- `video-debugging.md` — Debugging tools for video streams
+## Related Skills
+- [video-players.md](./video-players.md) — Player implementations and custom controls
+- [video-debugging.md](./video-debugging.md) — Debugging tools for video streams

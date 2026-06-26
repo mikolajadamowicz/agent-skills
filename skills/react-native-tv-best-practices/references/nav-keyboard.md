@@ -1,8 +1,14 @@
+---
+title: Keyboard Handling
+impact: HIGH
+tags: keyboard, text-input, voice-input, remote, tvevent, tv
+---
+
 # Keyboard Handling
 
 TV remotes were never meant for typing. Each character takes several arrow presses and a click. Minimize typing and make keyboards work well when needed.
 
-## Key Takeaways
+## Quick Reference
 - **Rule #1: Minimize input** — Use pre-filled options, voice input, search history, auto-complete
 - System keyboards feel natural to users; customize them before building custom
 - Map RCU buttons (play/pause) to confirm/cancel actions
@@ -108,6 +114,6 @@ Enable communication between mobile and TV apps for:
 
 Communication via local network (Wi-Fi) for media streaming scenarios.
 
-## Related
-- `nav-patterns.md` — Overall navigation structure
-- `a11y-implementation.md` — Accessible input handling
+## Related Skills
+- [nav-patterns.md](./nav-patterns.md) — Overall navigation structure
+- [a11y-implementation.md](./a11y-implementation.md) — Accessible input handling

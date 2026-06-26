@@ -1,13 +1,19 @@
+---
+title: CI/CD for TV Apps
+impact: MEDIUM
+tags: cicd, build-fingerprinting, diff-triggers, app-store, multi-platform, tv
+---
+
 # CI/CD for TV Apps
 
 In TV development, a simple "build and test" pipeline explodes in complexity. Every step multiplies by the number of platforms and targets you support.
 
-## Key Takeaways
+## Quick Reference
 - TV CI/CD = mobile pipeline × 6+ platforms × multiple device SKUs
 - **Fail fast, fail cheap** — shift E2E tests to faster integration tests
-- **Cache everything** — node_modules, Gradle, CocoaPods save tens of minutes across targets
 - **Build fingerprinting** — skip native builds when only JS changed (saves 50%+ pipeline time)
 - **Diff-based triggers** — only build platforms affected by changes
+- Standard CI caching (node_modules, Gradle, CocoaPods) applies as usual — it just pays off more here because every cache hit is multiplied across N platform targets
 
 ## The Multiplication Problem
 
@@ -22,15 +28,6 @@ Shift E2E tests into faster integration tests using RNTL:
 - ~80% of test logic runs at integration layer
 - Single set of integration tests runs identically across platforms
 - Dramatically faster feedback than device-based tests
-
-## Caching Everything
-
-| Cache | Savings |
-|-------|---------|
-| Node modules | ~1 min per build |
-| Gradle dependencies | Variable |
-| CocoaPods | Variable |
-| Combined across 10+ targets | Tens of minutes per run |
 
 ## Build Fingerprinting
 
@@ -96,7 +93,7 @@ Different platforms have different review processes:
 
 Consult official documentation for each target platform.
 
-## Related
-- `test-strategy.md` — Testing approach and tools
-- `test-e2e.md` — E2E testing and device farms
-- `setup-architecture.md` — Multi-platform project structure
+## Related Skills
+- [test-strategy.md](./test-strategy.md) — Testing approach and tools
+- [test-e2e.md](./test-e2e.md) — E2E testing and device farms
+- [setup-architecture.md](./setup-architecture.md) — Multi-platform project structure
