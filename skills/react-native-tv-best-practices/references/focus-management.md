@@ -38,7 +38,18 @@ Works like Android TV using Cartesian focus management strategy.
 Groups focusable elements so the system can remember last focused child or redirect focus intelligently.
 
 ```jsx
-<TVFocusGuideView destinations={[refSidebar, refGrid]}>
+const refSidebar = useRef(null);
+const refGrid = useRef(null);
+const [destinations, setDestinations] = useState([]);
+
+// destinations takes resolved components (ref.current), not the ref objects.
+// Build it AFTER mount: ref.current is null on first render and mutating a
+// ref triggers no re-render, so a new array must be set into state.
+useEffect(() => {
+  setDestinations([refSidebar.current, refGrid.current].filter(Boolean));
+}, []);
+
+<TVFocusGuideView destinations={destinations}>
   <View style={{ flexDirection: 'row' }}>
     <Sidebar ref={refSidebar} />
     <ContentGrid ref={refGrid} />
@@ -46,8 +57,10 @@ Groups focusable elements so the system can remember last focused child or redir
 </TVFocusGuideView>
 ```
 
+> If `Sidebar`/`ContentGrid` are custom function components, they must accept the ref: on **Vega OS (RN 0.72 / React 18)** wrap them in `forwardRef`; on **react-native-tvos with React 19 (RN 0.78+)** `ref` can be a plain prop. Built-in components like `TouchableOpacity` accept refs on both.
+
 ### Props
-- **`destinations`** — Array of refs to components that should receive focus when entering the guide
+- **`destinations`** — Array of `Component`s (pass `ref.current`, not the ref) to register as focus targets. The guide updates only when this prop *changes*; if refs are null on first render, set them into state once mounted so a new array is passed
 - **`trapFocusUp/Down/Left/Right`** — Prevents focus from escaping in specified directions
 - **`autoFocus`** — Redirects focus to first focusable child; remembers last focused child on revisit
 

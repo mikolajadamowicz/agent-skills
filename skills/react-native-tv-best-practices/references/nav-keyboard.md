@@ -34,17 +34,8 @@ Grid-based keyboard, navigate with arrow keys, confirm with "OK" button.
 Row-based keyboard, scroll with remote swipe gestures. Supports dictation and iOS Remote app.
 
 ### Keyboard Types
-```
-default       — Full autocomplete & autocorrect
-numeric       — Number-only
-email-address — Includes @, ., .com shortcuts
-url           — Includes /, ., .com suggestions
-number-pad    — Digits only (PINs, codes)
-phone-pad     — Phone dialing (digits + #, +)
-decimal-pad   — Numeric with decimal point
-```
 
-Use `secureTextEntry` for passwords (not a keyboardType).
+Prefer the narrowest `keyboardType` (`numeric`/`number-pad` for PINs) — it swaps the full grid keyboard for a smaller one, cutting D-pad travel. Use `secureTextEntry` for passwords (not a keyboardType).
 
 ## Customizing the Built-In Keyboard
 

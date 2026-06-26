@@ -22,13 +22,6 @@ Testing TV apps requires a thoughtful approach that considers focus management, 
 3. **Integration tests** — **Primary focus** — best balance of speed and coverage
 4. **E2E tests** — Sparingly, on real devices/emulators
 
-## Why Integration Tests for TV
-
-1. **Closer to real environment** — Test behavior in context resembling actual TV
-2. **Comprehensive coverage** — Multiple components and their interactions
-3. **Balance of speed and impact** — Faster than E2E, more meaningful than unit
-4. **Resilience** — Less affected by implementation detail changes
-
 ## Essential Testing Tools
 
 | Tool | Purpose |
@@ -56,8 +49,9 @@ describe('Video Player Controls', () => {
     // ARRANGE
     mockTVDeviceEnvironment();
     render(<Wrapper><VideoPlayer /></Wrapper>);
-    // ACT
-    fireEvent.tvRemote.press('PLAY');
+    // ACT — tvRemote is the project helper built in test-javascript.md;
+    // RNTL has no TV-remote API, so D-pad/OK presses go through it.
+    tvRemote.select({ elementToSelect: screen.getByLabelText('Play') });
     // ASSERT
     expect(screen.getByTestId('player-controls-modal')).toBeVisible();
   });

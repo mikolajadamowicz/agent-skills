@@ -164,12 +164,19 @@ useEffect(() => {
 
 ## Cross-Platform Focus
 
-Prefer `TVFocusGuideView` over `nextFocus*` for shared layouts. `destinations` takes an array of component **refs** (not string IDs):
+Prefer `TVFocusGuideView` over `nextFocus*` for shared layouts. `destinations` takes an array of resolved components (`ref.current`), not the ref objects and not string IDs. Don't build it inline — `ref.current` is `null` on the first render and mutating a ref triggers no re-render, so the guide would register nothing. Hoist the resolved components into state once the children have mounted:
 ```jsx
 const playRef = useRef(null);
 const infoRef = useRef(null);
+const [destinations, setDestinations] = useState([]);
 
-<TVFocusGuideView autoFocus destinations={[playRef, infoRef]}>
+// Children assign their refs after this component first renders; push the
+// resolved nodes into state so a NEW array is passed and the guide updates.
+useEffect(() => {
+  setDestinations([playRef.current, infoRef.current].filter(Boolean));
+}, []);
+
+<TVFocusGuideView destinations={destinations}>
   <TouchableOpacity ref={playRef} accessibilityRole="button" accessibilityLabel="Play" />
   <TouchableOpacity ref={infoRef} accessibilityRole="button" accessibilityLabel="Info" />
 </TVFocusGuideView>

@@ -6,8 +6,6 @@ tags: video, debugging, ffmpeg, ffprobe, charles, proxyman, profiling
 
 # Debugging Video Streams
 
-Video debugging requires specialized tools for media analysis, network inspection, and platform-specific behavior.
-
 ## Quick Reference
 - Use FFmpeg/ffprobe to inspect media properties and verify codec compatibility
 - Charles Proxy or Proxyman for network traffic analysis
@@ -24,17 +22,7 @@ Indispensable for diagnosing playback issues:
 
 ## Network Traffic Analysis
 
-### Charles Proxy
-Application-layer view of HTTP/HTTPS communication. Valuable for:
-- Inspecting manifest requests and responses
-- Verifying DRM license exchange
-- Monitoring adaptive bitrate switches
-
-### Proxyman
-Native macOS proxy tool with modern interface:
-- Install CA certificate on simulator/emulator/device
-- Intercept API calls, inspect headers and bodies
-- Supports filtering, breakpoints, request rewriting
+Use a proxy (Charles or Proxyman) to inspect manifest requests, verify the DRM license exchange, and watch adaptive-bitrate switches. Both require installing their CA certificate on the simulator/emulator/device to decrypt HTTPS — see the summary table below.
 
 ### Rozenite
 Chrome DevTools plugin with network inspection tab for React Native apps.

@@ -91,8 +91,6 @@ Different platforms have different review processes:
 - **Apple TV** — App Store review (tvOS-specific guidelines)
 - **webOS / Tizen** — Platform-specific submission portals
 
-Consult official documentation for each target platform.
-
 ## Related Skills
 - [test-strategy.md](./test-strategy.md) — Testing approach and tools
 - [test-e2e.md](./test-e2e.md) — E2E testing and device farms

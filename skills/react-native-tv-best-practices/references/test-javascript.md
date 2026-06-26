@@ -29,7 +29,7 @@ it('navigates and selects the play button', () => {
   const infoButton = screen.getByRole('button', { name: 'Info' });
   const playButton = screen.getByRole('button', { name: 'Play' });
 
-  fireEvent(infoButton, 'onFocus');
+  fireEvent(infoButton, 'focus');
   tvRemote.right({ elementToFocus: playButton, elementToBlur: infoButton });
   tvRemote.select({ elementToSelect: playButton });
 
@@ -41,12 +41,16 @@ it('navigates and selects the play button', () => {
 
 The snippets below are an illustrative scaffold for your own test utility. The `prepare*Event`/`emit*Event` functions are project-specific — define them to match the event shape your native focus layer dispatches. `PlatformSwitch` is a small local helper (shown below), not a React Native export.
 
+> **Package/version caveat:** `Platform.isTVOS` exists only on **react-native-tvos** (RN 0.76+, Apple TV / Android TV). On **Amazon Vega OS** (RN 0.72, `react-native-kepler`) it does **not** exist — Vega exposes `Platform.isTV` and `Platform.OS === 'kepler'`. The helper below is therefore tvOS-specific; don't copy `Platform.isTVOS` into a Vega project.
+
 ```jsx
-import { act } from '@testing-library/react-native';
+import { act, fireEvent } from '@testing-library/react-native';
 import { DeviceEventEmitter, Platform } from 'react-native';
 
-// Local helper: react-native-tvos reports Platform.OS === 'ios' on tvOS,
-// so branch on Platform.isTVOS to pick a tvOS vs. Android TV event sequence.
+// Local helper (react-native-tvos only): react-native-tvos reports
+// Platform.OS === 'ios' on tvOS, so branch on Platform.isTVOS to pick a
+// tvOS vs. Android TV event sequence. On Vega (react-native-kepler, RN 0.72)
+// isTVOS is unavailable — use Platform.isTV / Platform.OS === 'kepler' instead.
 const PlatformSwitch = {
   select: (spec) => (Platform.isTVOS ? spec.tvos : spec.default),
 };

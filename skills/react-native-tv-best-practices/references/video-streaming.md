@@ -31,16 +31,6 @@ A cross-platform app typically ships **both** an HLS+FairPlay path (Apple) and a
 
 DRM in any case requires a valid license server, app entitlements/permissions, and sometimes native player configuration (security level, hardware decryption).
 
-## Video Player Lifecycle
-
-1. **Content request** — Player requests manifest file
-2. **DRM license request** — Player asks for decryption license
-3. **DRM license response** — Server returns decryption keys (stored for session)
-4. **Playback** — Decrypted content plays
-5. **Error handling** — Graceful handling of decryption failures, expired licenses
-6. **License renewal** — Periodic renewal if time-limited
-7. **Cleanup** — Session termination on playback end
-
 ## Related Skills
 - [video-players.md](./video-players.md) — Player implementations and custom controls
 - [video-debugging.md](./video-debugging.md) — Debugging tools for video streams

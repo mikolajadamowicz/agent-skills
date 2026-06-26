@@ -9,6 +9,7 @@ tags: navigation, directional, focus-engine, d-pad, spatial-navigation, tv
 Every TV app starts with a simple question: where does the focus go next? When a viewer presses an arrow on the remote, the app must decide which element becomes active.
 
 ## Quick Reference
+
 - TV navigation is fundamentally physical — each button press is deliberate
 - Platform focus engines differ: tvOS uses spatial inference, Android TV uses proximity, web-based TVs need JS libraries
 - Design layouts that work with the focus engine, not against it
@@ -17,7 +18,9 @@ Every TV app starts with a simple question: where does the focus go next? When a
 ## How Focus Engines Work
 
 ### tvOS — High Precision
+
 Apple's engine examines layout geometry:
+
 - Searches for focusable views based on spatial proximity in the pressed direction
 - Treats related items as "focus islands" (cohesion zones)
 - Expects clean grid/alignment patterns
@@ -25,17 +28,22 @@ Apple's engine examines layout geometry:
 - Account for diagonal movement and inertia-based swipes
 
 ### Android TV — Developer-Defined
+
 More flexible, leans on developer direction:
+
 - Focus moves to nearest visible item along pressed direction (Cartesian)
 - Override with `nextFocusUp`, `nextFocusDown`, `nextFocusLeft`, `nextFocusRight`
 - Tolerates less regular layouts
 - When no valid target exists, focus can disappear
 
 ### Vega OS
+
 Same Cartesian focus management as Android TV — focus moves to "closest" item in D-pad direction.
 
 ### Web-Based TVs (Tizen, webOS)
+
 No native focus engine — must use JavaScript spatial navigation:
+
 - `@noriginmedia/norigin-spatial-navigation` is the most popular library
 - Keeps a registry of focusable nodes
 - Listens for arrow/enter keys
@@ -47,19 +55,20 @@ For most apps, the best focus management is no explicit management at all:
 
 ```jsx
 <View style={styles.row}>
-  {items.map((item) => (
-    <Pressable
-      key={item.id}
-      onPress={() => select(item)}
-      onFocus={() => setFocusedItem(item.id)}
-    >
-      <Image source={item.poster} />
-    </Pressable>
-  ))}
+	{items.map((item) => (
+		<Pressable
+			key={item.id}
+			onPress={() => select(item)}
+			onFocus={() => setFocusedItem(item.id)}
+		>
+			<Image source={item.poster} />
+		</Pressable>
+	))}
 </View>
 ```
 
 **Key strategies:**
+
 - Align and space elements logically
 - Avoid dead zones — gaps cause unpredictable jumps
 - Group related UI into containers ("focus islands")
@@ -84,6 +93,7 @@ Each platform builds a focus tree — an internal map of all focusable elements.
 - **Shallow hierarchy:** Too many layers makes users lose their bearings
 
 ## Related Skills
+
 - [focus-management.md](./focus-management.md) — TVFocusGuideView, hasTVPreferredFocus, debugging
 - [nav-patterns.md](./nav-patterns.md) — Drawer, tabs, modals, back navigation
 - [design-layout.md](./design-layout.md) — Layout patterns that support natural focus flow
