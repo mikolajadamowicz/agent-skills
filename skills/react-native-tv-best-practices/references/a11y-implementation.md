@@ -88,7 +88,10 @@ AccessibilityInfo.announceForAccessibility('Added to Watchlist');
   accessibilityViewIsModal={true}
   onRequestClose={handleClose}
 >
-  <View accessible accessibilityLabel="Continue watching?">
+  <View>
+    {/* Don't wrap the body in `accessible` — it collapses children into one
+        element and hides the buttons from focus. Label a header node instead. */}
+    <Text accessibilityRole="header">Continue watching?</Text>
     <Text>Are you still watching?</Text>
     <Button title="Yes" onPress={handleContinue} />
     <Button title="No" onPress={handleExit} />
@@ -151,7 +154,11 @@ Hide purely decorative icons with `accessible={false}`.
 
 - Mute by default unless user opts in
 - Include remote-focusable playback controls
-- Use `AccessibilityInfo.isScreenReaderEnabled()` to conditionally mute
+- `AccessibilityInfo.isScreenReaderEnabled()` returns a **Promise** — `await` it (or subscribe to the `screenReaderChanged` event) before deciding whether to mute; a bare synchronous `if` is always truthy:
+  ```jsx
+  const srOn = await AccessibilityInfo.isScreenReaderEnabled();
+  if (srOn) muteAutoplay();
+  ```
 - Apple TV: respect system audio focus, integrate with `AVAudioSession`
 
 ## Focus on Screen Changes

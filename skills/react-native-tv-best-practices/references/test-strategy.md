@@ -13,7 +13,7 @@ Testing TV apps requires a thoughtful approach that considers focus management, 
 - Integration tests provide best effect-per-effort ratio for TV apps
 - Shift E2E tests into faster integration tests using RNTL where possible
 - ~80% of test logic can run at integration layer before reaching a device
-- Always test on real hardware — emulators can't replicate overscan, input latency, or color profiles
+- Validate on real hardware for device-specific behavior — emulators can't replicate overscan, input latency, or color profiles (emulators are fine for most integration/E2E flows; see [test-e2e.md](./test-e2e.md))
 
 ## Trophy Testing Approach (Kent C. Dodds)
 

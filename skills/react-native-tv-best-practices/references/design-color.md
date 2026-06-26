@@ -36,6 +36,8 @@ Color systems that work on phones can wash out or over-glow on TV. Distance, pan
 | Warning | #FF9500 | 7.1:1 | 6.0:1 | Warnings, notices |
 | Danger | #FF3B30 | 5.9:1 | 5.0:1 | Errors, destructive actions |
 
+> WCAG 1.4.3 requires **4.5:1** for normal text and **3:1** for large text (≥24px, or ≥18.66px bold). The disabled-text row falls below 4.5:1 by design — inactive/disabled UI components are exempt from the contrast minimum. Don't reuse that ratio for active text.
+
 ## Ambient Light Adaptation
 
 | Environment | Background | Primary Text | Secondary Text | Accent | Min Contrast |
@@ -43,6 +45,8 @@ Color systems that work on phones can wash out or over-glow on TV. Distance, pan
 | Bright room | #000000 | #FFFFFF | #E5E5E7 | #007AFF | 7:1 |
 | Dim room | #1a1a1a | #E5E5E7 | #B3B3B3 | #5AC8FA | 4.5:1 |
 | Dark room | #2a2a2a | #D1D1D6 | #8E8E93 | #64D2FF | 3:1 |
+
+> The dark-room 3:1 minimum applies to **large text and UI components** only (WCAG large-text / non-text contrast). Keep body text at 4.5:1 regardless of ambient profile.
 
 ## HDR Considerations
 

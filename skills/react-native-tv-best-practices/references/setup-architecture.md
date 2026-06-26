@@ -108,14 +108,18 @@ Quickest way to share RN code to web. Converts `View`/`Text` to `div`/`span`. Tr
 
 ## Platform-Specific Styles
 
+`Platform.select` keys match `Platform.OS`, not the marketing name — there are no `tvOS`/`fireTV` keys. `Platform.OS` is `ios` on Apple TV and `android` on Android TV / Fire TV (`react-native-tvos`), but `kepler` on Vega (see [Vega OS](#vega-os) below). Gate TV-only logic with `Platform.isTV`:
+
 ```jsx
 import { StyleSheet, Platform } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     ...Platform.select({
-      fireTV: { shadowColor: '#000', shadowOpacity: 0.2 },
-      tvOS: { elevation: 4 },
+      ios: { shadowColor: '#000', shadowOpacity: 0.2 }, // tvOS uses shadow*
+      android: { elevation: 4 },                        // Android TV / Fire TV
+      // Vega (Platform.OS === 'kepler') matches neither — add a `kepler` key if needed
     }),
+    ...(Platform.isTV ? { padding: 24 } : {}),
   },
 });
 ```

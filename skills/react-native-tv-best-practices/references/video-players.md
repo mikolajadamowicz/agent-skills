@@ -30,7 +30,7 @@ From simple playback with react-native-video to enterprise-grade streaming with 
 
 ```jsx
 <Video
-  source={{ uri: 'https://example.com/video.mp4' }}
+  source={{ uri: 'https://example.com/manifest.mpd' }} // Widevine ships over DASH (.mpd); FairPlay uses HLS (.m3u8)
   drm={{
     type: DRMType.WIDEVINE,
     licenseServer: 'https://license.example.com/widevine',

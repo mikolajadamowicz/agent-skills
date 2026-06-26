@@ -1,6 +1,6 @@
 ---
 name: react-native-tv-best-practices
-description: Provides React Native TV development guidance for focus/D-pad navigation, 10-foot design, video streaming/DRM, TV performance, and accessibility across Apple TV, Android TV, Fire TV, Vega OS, Tizen, and webOS. Use when building or debugging React Native TV apps with react-native-tvos, fixing focus issues, or optimizing for TV hardware.
+description: Provides React Native TV development guidance for focus/D-pad navigation, 10-foot design, video streaming/DRM, TV performance, and accessibility across Apple TV, Android TV, Fire TV, Vega OS, Tizen, and webOS. Use when building, debugging, or reviewing React Native TV apps — fixing or setting focus and D-pad navigation, making text and layout readable from a distance (10-foot UI), video streaming or DRM playback, optimizing for low-end TV hardware, or TV accessibility — on react-native-tvos, Expo TV, or Amazon Vega/Kepler.
 license: MIT
 metadata:
   author: Mikolaj Adamowicz

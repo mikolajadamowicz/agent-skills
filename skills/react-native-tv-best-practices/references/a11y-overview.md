@@ -39,7 +39,7 @@ What's different about accessibility on TV versus mobile/web — the deltas you 
 - **Apple TV (VoiceOver):** Focus can jump non-linearly. `accessibilityHint` read immediately after label. Role mapping consistent with iOS.
 - **Android TV (TalkBack):** Linear D-pad navigation. `accessibilityHint` sometimes skipped unless `accessible={true}` is explicit.
 
-The standard React Native accessibility props (`accessible`, `accessibilityLabel`, `accessibilityRole`, `accessibilityState`, `accessibilityLiveRegion`, `accessibilityViewIsModal`) behave the same on TV — see [a11y-implementation.md](./a11y-implementation.md) for TV-specific usage and the platform quirks above for where they diverge.
+These are the core React Native accessibility props (`accessible`, `accessibilityLabel`, `accessibilityRole`, `accessibilityState`, `accessibilityLiveRegion`, `accessibilityViewIsModal`) you'll use on TV, but support varies by platform — see [a11y-implementation.md](./a11y-implementation.md) for TV-specific usage and the platform quirks above for where they diverge.
 
 ## Related Skills
 - [a11y-implementation.md](./a11y-implementation.md) — Detailed implementation guide

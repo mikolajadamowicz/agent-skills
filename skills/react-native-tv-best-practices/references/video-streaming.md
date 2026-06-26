@@ -22,7 +22,7 @@ ABR, HLS/DASH, and DRM work the same on TV as anywhere else — this reference a
 | Fire TV | ExoPlayer | Widevine (PlayReady on some SKUs) | DASH |
 | webOS / Tizen | platform web player | Widevine / PlayReady | DASH (HLS varies) |
 
-A cross-platform app typically ships **both** an HLS+FairPlay path (Apple) and a DASH+Widevine path (everything else); plan the encode/packaging for both.
+A cross-platform app typically ships an HLS+FairPlay path for Apple and a DASH-based path for other platforms, with Widevine or PlayReady chosen per device support; plan the encode/packaging for both.
 
 ## TV Hardware Constraints That Bite
 - **Security level is enforced in hardware.** Widevine L1 / FairPlay require hardware-backed decryption for HD/4K; low-end SKUs may only offer L3 (SD-capped). Detect and degrade gracefully rather than failing playback.

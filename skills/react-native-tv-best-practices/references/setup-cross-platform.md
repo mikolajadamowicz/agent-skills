@@ -37,16 +37,22 @@ React Native automatically selects the correct file for the running platform.
 
 ## Platform-Specific Styles
 
+`Platform.select` keys match `Platform.OS`, not the marketing name — there are no `tvOS`/`fireTV` keys. The value differs per fork: `ios` on Apple TV and `android` on Android TV / Fire TV (`react-native-tvos`), but `kepler` on Vega (`react-native-kepler`). Branch on `Platform.OS` and gate TV-only logic with `Platform.isTV` (which is `true` on all three):
+
 ```jsx
 const styles = StyleSheet.create({
   container: {
     ...Platform.select({
-      fireTV: { shadowColor: '#000', shadowOpacity: 0.2 },
-      tvOS: { elevation: 4 },
+      ios: { shadowColor: '#000', shadowOpacity: 0.2 }, // tvOS uses shadow*
+      android: { elevation: 4 },                        // Android TV / Fire TV
+      // Vega (Platform.OS === 'kepler') matches neither — add a `kepler` key if needed
     }),
+    ...(Platform.isTV ? { padding: 24 } : {}),
   },
 });
 ```
+
+> Note: `react-native-tvos` can't tell Fire TV apart from Android TV via `Platform` — both report `android`. Use device manufacturer info for that distinction.
 
 ## Third-Party Libraries
 
