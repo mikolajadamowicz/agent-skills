@@ -40,29 +40,17 @@ const onRowFocus = (rowId) => {
 };
 ```
 
-## Prefetching
+## TV-Specific Checks
 
-```jsx
-useEffect(() => {
-  prefetchRowData(currentRow + 1);
-}, [currentRow]);
-```
+1. **Prefetch where it matters** — Preload the next likely screen or row, then verify memory on low-end devices.
 
-Hides network latency during fast remote presses.
+2. **Use placeholders instead of blocking** — Focus movement should remain instant even when row metadata is stale or still loading.
 
-## Best Practices
+3. **Prioritize visible content** — Load the hero/current row first; defer secondary rows and rich metadata.
 
-1. **Prefetch where it matters** — Preload next likely screen/row; keep payloads small.
+4. **Handle retries gracefully** — Remote presses during stalls should not spam duplicate requests.
 
-2. **Use placeholders instead of blocking** — Show cached posters first, swap in updated metadata. Avoid "all-or-nothing" loading on home screen.
-
-3. **Prioritize hero content** — Load top banner row first (first thing user sees). Defer secondary rows.
-
-4. **Handle retries gracefully** — Remote presses during stalls should not spam duplicate requests. Debounce input or use request-in-flight check.
-
-5. **Optimize payload size** — Strip unused JSON fields for TV clients. Use server-side image resizing.
-
-6. **Smart caching** — `force-cache` for static assets (thumbnails, logos). Sensible `max-age` headers for repeat sessions.
+5. **Keep caches memory-aware** — Cached posters plus JSON plus video buffers can create GC stutter on Fire TV and smart TVs.
 
 ## Platform Quirks
 

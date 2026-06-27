@@ -10,7 +10,6 @@ On TV, every D-pad press sends focus change events. Careless handling triggers d
 
 ## Quick Reference
 - Keep focus effects local — don't update global state for visual changes
-- Use `React.memo` to prevent full-row re-renders on focus change
 - Prefer a single top-level focus frame over per-card overlays
 - Use transforms (scale, translate) not layout properties (width, height) for focus animations
 - Batch focus updates in one render frame
@@ -87,15 +86,15 @@ return (
 ```
 One focus frame moves around — no duplication, minimal re-renders.
 
-## Best Practices
+## TV-Specific Checks
 
-1. **Keep focus effects local** — Don't update Redux/Zustand for visual focus changes. Pass focus as context value if multiple subcomponents need it.
+1. **Keep focus effects local** — Don't update Redux/Zustand for visual focus changes.
 
 2. **Preload focus styles** — Shadows, glows, gradients are GPU-expensive to generate on the fly. Pre-render them and toggle visibility.
 
-3. **Batch focus updates** — Use `unstable_batchedUpdates` or a single `setState` to update multiple UI elements on focus.
+3. **Batch focus updates** — A single D-pad press can fire blur and focus events across multiple elements.
 
-4. **Avoid layout shifts** — Use transforms (scale, translate) for focus animations, not layout properties like width/height. This keeps GPU work cheaper.
+4. **Avoid layout shifts** — Changing focus geometry can make the next directional search unstable.
 
 5. **Use platform-specific focus helpers:**
    - On Android TV/Fire TV: `focusable` prop reduces extra focus jumps

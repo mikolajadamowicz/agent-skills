@@ -6,13 +6,11 @@ tags: video, players, react-native-video, exoplayer, avplayer, shaka, drm
 
 # Video Players for React Native TV
 
-From simple playback with react-native-video to enterprise-grade streaming with Shaka Player — choose the right level of abstraction for your needs.
-
 ## Quick Reference
-- `react-native-video` covers most use cases (HLS/MP4, basic DRM, built-in controls)
-- For enterprise-grade (live sports, complex DRM, custom ABR): consider Shaka Player or native players
-- Custom controls: add a ref to Video component and build React Native UI on top
-- Thumbnail previews: BIF format is most performant for seek bar thumbnails
+- Choose the player after the target platform and DRM/protocol path are known
+- Native TV targets usually end at AVPlayer/ExoPlayer through a wrapper or native module
+- Web-based TV targets can use Shaka, hls.js, or dash.js in the browser context
+- For seek thumbnails, prefer BIF or another indexed single-file format over many image requests
 
 ## Available Players
 
@@ -26,66 +24,12 @@ From simple playback with react-native-video to enterprise-grade streaming with 
 | hls.js | Web-based TVs | HLS playback in browsers |
 | dash.js | Web-based TVs | MPEG-DASH reference player |
 
-## react-native-video — Basic Setup
+## Player-Control Checks
 
-```jsx
-<Video
-  source={{ uri: 'https://example.com/manifest.mpd' }} // Widevine ships over DASH (.mpd); FairPlay uses HLS (.m3u8)
-  drm={{
-    type: DRMType.WIDEVINE,
-    licenseServer: 'https://license.example.com/widevine',
-    getLicense: fetchLicense,
-    headers: { Authorization: 'Bearer your-token' },
-  }}
-  style={{ width: '100%', aspectRatio: 16 / 9 }}
-  controls
-  onLoadStart={() => console.log('Requesting manifest & license')}
-  onReadyForDisplay={() => console.log('Decryption complete')}
-  onError={(e) => console.error('Error:', e)}
-  onEnd={() => console.log('Session complete, cleanup')}
-/>
-```
-
-## Custom Controls
-
-```jsx
-<View style={{ flex: 1 }}>
-  <Video
-    source={{ uri: 'https://example.com/video.mp4' }}
-    ref={videoRef}
-    onProgress={({ currentTime }) => setProgress(currentTime)}
-  />
-  <View style={styles.controls}>
-    <TouchableOpacity onPress={() => videoRef.current?.pause()}>
-      <Icon name="pause" />
-    </TouchableOpacity>
-    <Slider
-      value={progress}
-      onSlidingComplete={(value) => videoRef.current?.seek(value)}
-    />
-  </View>
-</View>
-```
-
-## Seek Bar Implementation
-
-```jsx
-const [currentTime, setCurrentTime] = useState(0);
-const [duration, setDuration] = useState(0);
-const [seeking, setSeeking] = useState(false);
-
-<Video
-  ref={videoRef}
-  onProgress={(data) => { if (!seeking) setCurrentTime(data.currentTime); }}
-  onLoad={(data) => setDuration(data.duration)}
-/>
-<Slider
-  value={currentTime}
-  maximumValue={duration}
-  onValueChange={(time) => { setSeeking(true); setCurrentTime(time); }}
-  onSlidingComplete={(time) => { videoRef.current.seek(time); setSeeking(false); }}
-/>
-```
+- Do not mount multiple hidden player instances for preview + main playback unless the target device can decode them concurrently.
+- Keep player controls remote-focusable even when video is buffering or DRM is negotiating.
+- Separate seekbar focus state from playback progress state so rapid scrubbing does not fight `onProgress`.
+- Tear down preview playback before starting protected main content on memory-constrained devices.
 
 ## Thumbnail Generation — BIF Format
 
@@ -104,12 +48,10 @@ For large videos (2+ hours), use a native module for BIF parsing. Cache BIF file
 
 ## Shaka Player for Enterprise
 
-For complex streaming (live sports, multi-DRM, custom ABR):
-1. Build Shaka Player for React Native using provided build script
-2. Create Turbo Native Modules bridging to AVPlayer/ExoPlayer
-3. Build a ShakaPlayerComponent to bridge native to React Native
+For complex streaming (live sports, multi-DRM, custom ABR), choose the architecture explicitly:
 
-Shaka supports DASH + HLS, offline playback, and custom ABR logic. Runs in React Native's JS core and communicates with native players.
+- **Web-based TV targets:** Run Shaka in the TV browser/webview context and render controls in the web UI.
+- **Native React Native targets:** Prefer AVPlayer/ExoPlayer through `react-native-video`, THEOplayer, or a custom native module. If Shaka is required for packaging/ABR logic, treat it as an orchestration layer and bridge the native playback surface deliberately; do not assume browser Shaka drops into a native RN view unchanged.
 
 ## When to Use What
 

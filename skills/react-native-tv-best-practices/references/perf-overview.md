@@ -9,10 +9,10 @@ tags: performance, device-tiers, kpis, startup, hardware, tv
 TV hardware is significantly weaker than modern phones. A 65" TV is often closer to a budget Android phone in CPU/GPU terms — while also decoding 4K video.
 
 ## Quick Reference
-- **Golden Rule:** Design for the weakest device, make it feel like the fastest one
-- Optimize from day one, not as a pre-release checkbox
-- Always keep a low-end streaming stick in your dev kit
-- Treat your weakest device as the CI build target
+- Set performance budgets from the weakest supported TV device
+- Keep one low-end streaming stick or TV in the regular test matrix
+- Measure input latency, FPS during focus movement, memory, startup, and time to playback
+- Treat video playback as part of the performance budget; UI work competes with decode and buffers
 
 ## Why Performance Is Unforgiving on TV
 
@@ -47,34 +47,13 @@ Add visual polish: parallax banners, chained animations, cinematic transitions.
 | Time to first meaningful paint | <3s | <2s | <1.5s |
 | FPS during navigation | 60 | 60 | 60 |
 
-## Key Performance Areas
+## TV-Specific Performance Checks
 
-1. **Startup time** — Only perform necessary operations at launch; defer everything else
-   - JS bundle size: use Hermes, Re.Pack code splitting, Lazy Loading
-   - Defer: analytics init, prefetching non-critical data
-
-2. **Reactiveness** — Minimize latency between input and response
-   - Delay non-essential operations while user navigates
-   - Debounce rapid button presses
-   - Show skeleton screens while loading
-
-3. **Content loading** — Fetch only what's needed for display
-   - Prioritize visible, above-the-fold content
-   - Use pagination, not unbounded queries
-
-4. **Network** — Every query costs time
-   - Cache responses; pre-fetch next likely screen
-   - Strip unused JSON fields for TV clients
-   - Server-side image resizing
-
-5. **Components** — Keep renders cheap
-   - Memoize expensive components
-   - Avoid unnecessary re-renders from state changes
-   - Gradients, masks, animations are expensive — use sparingly
-
-6. **Images** — Biggest performance impact after video
-   - Download at display size, not full resolution
-   - Never resize/scale/filter on client — do it on server
+1. **Remote input latency** — Measure the delay from D-pad press to visible focus movement. Keyboard input and simulator clicks hide this class of regression.
+2. **Playback startup** — Track manifest request, DRM license request, first decoded frame, and controls-ready time separately.
+3. **Memory with video active** — Measure carousels and overlays while a video surface is mounted; image caches and video buffers share the same low memory budget.
+4. **Focus navigation FPS** — Measure row-to-row and card-to-card movement, not only inertial scrolling.
+5. **Device tier fallback** — Disable heavy shadows, gradients, parallax, and long transitions on low-end devices before reducing content density.
 
 ## Automating Performance Measurements
 
@@ -90,7 +69,6 @@ AppRegistry.registerComponent(appName, () => {
 ```
 
 - Collect timestamps via automated tests on real devices
-- Use AWS Device Farm for Fire TV/Android TV
 - Push metrics to Grafana/Datadog for trend tracking
 - Fail CI if metrics regress beyond thresholds
 

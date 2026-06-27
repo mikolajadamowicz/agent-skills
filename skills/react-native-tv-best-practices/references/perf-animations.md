@@ -9,10 +9,9 @@ tags: animations, reanimated, native-driver, transforms, focus, tv
 Animations make a TV app feel polished — if they're smooth. On TV hardware, JS-driven animations tank performance fast because the JS thread competes with focus handling, list rendering, and playback controls.
 
 ## Quick Reference
-- **Always use `useNativeDriver: true`** for transforms and opacity
 - Keep focus animations short: 100-150ms
-- Avoid animating layout properties (width, height, margin) — use transforms instead
-- Use Reanimated 3 for complex sequences (runs off JS thread via worklets)
+- Keep focus animations off the JS thread; JS also handles remote input and player controls
+- Avoid focus animations that change layout or move adjacent focus targets
 - Test with the actual remote — keyboard/dev tools hide input lag
 
 ## Why It's Worse on TV
@@ -55,19 +54,17 @@ JS-driven chains (fade → scale → shadow) cause multiple layout passes.
 - Combine into one `Animated.parallel` call, all using native driver
 - Or use **Reanimated 3** to orchestrate in a single worklet off JS thread
 
-## Best Practices
+## TV-Specific Checks
 
-1. **`useNativeDriver` everywhere possible** — especially for transforms (scale, translate, rotate) and opacity. These are GPU-friendly.
-
-2. **Keep animations short:**
+1. **Keep animations short:**
    - 100-150ms for focus changes = feels instant
    - 300-500ms "hero" animations only for big transitions
 
-3. **Avoid layout-changing animations** — `width`/`height`/`margin` force layout recalculation (slow on low-power CPUs). Use transforms or opacity instead.
+2. **Do not move focus targets during focus search** — Layout-changing focus effects can make the next D-pad direction ambiguous.
 
-4. **Prefer Reanimated for complex sequences** — worklets run natively without blocking JS. Good for home-screen heroes, auto-scrolling carousels, parallax.
+3. **Keep complex sequences off JS** — Home-screen heroes, auto-scrolling carousels, and parallax must not block remote input.
 
-5. **Test with actual remote** — keyboard and dev tools hide input lag. Even 50ms extra delay is noticeable on a remote.
+4. **Test with actual remote** — Keyboard and dev tools hide input lag. Even 50ms extra delay is noticeable on a remote.
 
 ## Platform Quirks
 

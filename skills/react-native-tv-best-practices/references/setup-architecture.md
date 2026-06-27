@@ -10,13 +10,12 @@ The choice of structure depends on your project's scope and whether your app is 
 
 ## Quick Reference
 - Monorepo is the most common structure for TV apps (platforms require bundled applications)
-- 60-80% of mobile React Native code can typically be reused for TV
-- Share business logic, state, hooks, API layers; customize UI per platform
-- Use platform extensions (`.tvos.js`, `.ios.js`, `.android.js`) for drastically different UI
+- Reuse business logic, state, hooks, and API layers before reusing screen UI
+- Expect TV screen UI, focus behavior, and platform packaging to need dedicated implementations
+- Use TV-specific Metro extensions (`.ios.tv.*`, `.android.tv.*`, `.tv.*`) only when the project has enabled them in Metro
 
-## Project Structure
+## Multi-Platform TV Shape
 
-### Multi-Platform TV App
 ```
 my-tv-app/
 ├── ios/              # iOS native files
@@ -32,20 +31,7 @@ my-tv-app/
 └── package.json
 ```
 
-### Monorepo Approaches
-1. **Universal app structure** — `apps/` + `packages/` directories with Turborepo
-2. **Feature-driven** — Teams own features end-to-end, integrate into main app
-
-## What to Share
-
-| Layer | Shareability | Notes |
-|-------|-------------|-------|
-| Business logic, API layers | High | Custom hooks, services, critical logic |
-| State management | High | Redux, Zustand, Context API |
-| Navigation logic | Medium | Expo Router helps; customization per platform still needed |
-| UI components | Low-Medium | Design tokens shareable; components need 10-foot customization |
-| Testing infrastructure | High | Tools shared across platforms |
-| In-app purchases | Low | Platform-specific due to app store requirements |
+Use this shape as a detection aid, not a required layout. The important review question is whether TV-native folders and packaging files match the stack detected in [SKILL.md](../SKILL.md).
 
 ## Platform Detection
 
@@ -58,53 +44,16 @@ if (Platform.isTV) {
 
 ## Platform-Specific Components
 
-For drastically different UI, use file extensions:
+For UI that differs by focus model or TV layout, use file extensions:
 ```
-MyComponent.tvos.js
-MyComponent.ios.js
-MyComponent.android.js
-```
-
-React Native automatically picks the correct file for the running platform.
-
-## Code Sharing Strategies
-
-### 1. Composition with Platform Extensions (Recommended)
-Abstract leaf nodes into components with platform implementations:
-
-```tsx
-// Item.native.tsx
-import { View, Text } from 'react-native';
-export const Item = ({ title }) => (
-  <View style={styles.listItem}><Text>{title}</Text></View>
-);
-
-// Item.web.tsx
-export const Item = ({ title }) => (
-  <div className="list-item"><p>{title}</p></div>
-);
+MyComponent.ios.tv.tsx
+MyComponent.android.tv.tsx
+MyComponent.tv.tsx
+MyComponent.ios.tsx
+MyComponent.android.tsx
 ```
 
-**Benefit:** Platform-native experiences, familiar tools per platform.
-
-### 2. React Strict DOM
-From Meta, uses StyleX for styling — maximizes code sharing:
-```tsx
-import { html } from 'react-strict-dom';
-const Foo = () => (
-  <html.main>
-    <html.h1>Title</html.h1>
-    <html.p>Content</html.p>
-  </html.main>
-);
-```
-Still in heavy development.
-
-### 3. React Native for Web
-Quickest way to share RN code to web. Converts `View`/`Text` to `div`/`span`. Trade-offs:
-- Adds noticeable JS bundle size
-- Runtime helper logic slows lower-end devices
-- Currently in maintenance mode
+`react-native-tvos` documents this resolution order for projects that opt into TV extensions in Metro: platform-specific TV file, generic TV file, then normal platform file. This Metro configuration is not enabled by default because it can affect bundling performance.
 
 ## Platform-Specific Styles
 

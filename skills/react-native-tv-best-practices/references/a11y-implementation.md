@@ -6,79 +6,28 @@ tags: accessibility, screen-reader, focus, voiceover, talkback, tv
 
 # Accessibility Implementation in React Native TV
 
-Practical guide to implementing accessibility across TV platforms with code examples for common patterns.
-
 ## Quick Reference
-- Set `accessible={true}` on all interactive elements
-- Every focusable element needs `accessibilityLabel` + `accessibilityRole`
-- Use `accessibilityLiveRegion="polite"` for dynamic content updates
-- Prefer `TVFocusGuideView` for cross-platform focus management; use `nextFocus*` only as a targeted override
-- Test on real devices with screen readers enabled
+- For agent-run checks, load the `agent-device` skill first, then read `agent-device help workflow`
+- Use `agent-device` accessibility-tree evidence to inspect exposed labels, roles, states, focus, and modal behavior
+- Use manual screen-reader testing only for spoken-output timing, audio behavior, and platform quirks that automation cannot prove
+- Do not put `accessible={true}` high in a modal/body tree; it collapses focusable children into one item
+- Prefer `TVFocusGuideView` for shared focus paths; use `nextFocus*` only as a targeted override
+- Await `AccessibilityInfo.isScreenReaderEnabled()` before muting autoplay or changing announcements
+- Pair visual-only remote feedback with an accessibility announcement when state changes
 
-## Making Elements Accessible
+## Agent-Run Accessibility Smoke
 
-```jsx
-<View
-  accessible={true}
-  accessibilityRole="button"
-  accessibilityLabel="Watch Trailer"
-  accessibilityHint="Press center button to play the trailer"
->
-  <Image source={trailerImage} style={styles.thumbnail} />
-  <Text style={styles.caption}>Watch Trailer</Text>
-</View>
-```
+Before planning or running device automation, load the `agent-device` skill and follow its setup/help flow. Do not duplicate command recipes here; use the installed `agent-device` help for current command shapes and platform limits.
 
-> `accessible={true}` at parent groups all children into one selectable component. Be careful — too far up in hierarchy makes components inaccessible.
+An AI agent should not claim it heard VoiceOver, TalkBack, or VoiceView. Instead, use `agent-device` to inspect what the app exposes to platform accessibility. Check the accessibility-tree evidence for:
 
-## Roles
+- Interactive controls expose useful labels, roles, enabled/disabled state, and selected/checked state
+- The currently focused element is the expected remote target after each D-pad press
+- Modal opening moves focus inside the modal and hides or de-prioritizes background controls
+- Closing a modal restores focus to the invoking control or another predictable target
+- Dynamic state changes expose updated labels/state or a live-region/announcement path
 
-Common roles for TV apps:
-- `button` — Triggers an action
-- `header` — Section header or title
-- `image` — Visual content
-- `text` — Static/dynamic text
-- `imagebutton` — Image acting as button
-- `adjustable` — Sliders, knobs
-- `link` — Navigation (inconsistent on Android TV)
-- `dialog` — Modal dialogs
-- `switch` — Toggle controls
-
-## Labels and Hints
-
-```jsx
-<TouchableOpacity
-  accessibilityLabel="Subscribe to Stranger Things"
-  accessibilityHint="Press OK to Subscribe"
-  accessibilityRole="button"
->
-  <Text>Subscribe</Text>
-</TouchableOpacity>
-```
-
-| Label | Hint |
-|-------|------|
-| "Play" | "Plays the selected movie" |
-| "Delete" | "Removes this item from your list" |
-| "Stranger Things" | "Press OK for more details" |
-
-Use hints only when outcome is not obvious from label/context.
-
-## Dynamic Content
-
-Announce updates to screen readers:
-```jsx
-<View accessibilityLiveRegion="polite">
-  {results.map(result => (
-    <Text key={result.id}>{result.title}</Text>
-  ))}
-</View>
-```
-
-For major changes:
-```jsx
-AccessibilityInfo.announceForAccessibility('Added to Watchlist');
-```
+Escalate to manual screen-reader testing for the parts `agent-device` cannot verify: exact spoken order, announcement timing, audio-description behavior, caption rendering, and platform-specific verbosity.
 
 ## Accessible Modals
 
@@ -103,56 +52,8 @@ AccessibilityInfo.announceForAccessibility('Added to Watchlist');
 - Trap focus within modal
 - Announce dialog opening
 
-## Scrollable Content
-
-```jsx
-<FlatList
-  horizontal
-  data={movies}
-  renderItem={({ item }) => (
-    <TouchableOpacity
-      focusable={true}
-      accessibilityLabel={`Movie: ${item.title}`}
-    >
-      <Image source={{ uri: item.thumbnail }} />
-    </TouchableOpacity>
-  )}
-/>
-```
-
-Add section headings:
-```jsx
-<View accessible accessibilityRole="header" accessibilityLabel="Top Stories">
-  <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Top Stories</Text>
-</View>
-```
-
-## Icons Without Text
-
-```jsx
-<TouchableOpacity accessibilityLabel="Delete item">
-  <Icon name="trash" />
-</TouchableOpacity>
-```
-
-Hide purely decorative icons with `accessible={false}`.
-
-## Audio Description Toggle
-
-```jsx
-<TouchableOpacity
-  onPress={toggleAudioDescription}
-  accessibilityRole="switch"
-  accessibilityLabel="Audio Description"
-  accessibilityState={{ checked: audioDescriptionEnabled }}
->
-  <Text>Audio Description: {audioDescriptionEnabled ? 'On' : 'Off'}</Text>
-</TouchableOpacity>
-```
-
 ## Autoplay Content
 
-- Mute by default unless user opts in
 - Include remote-focusable playback controls
 - `AccessibilityInfo.isScreenReaderEnabled()` returns a **Promise** — `await` it (or subscribe to the `screenReaderChanged` event) before deciding whether to mute; a bare synchronous `if` is always truthy:
   ```jsx
@@ -160,14 +61,6 @@ Hide purely decorative icons with `accessible={false}`.
   if (srOn) muteAutoplay();
   ```
 - Apple TV: respect system audio focus, integrate with `AVAudioSession`
-
-## Focus on Screen Changes
-
-```jsx
-useEffect(() => {
-  focusableElementRef.current?.requestTVFocus();
-}, []);
-```
 
 ## Cross-Platform Focus
 
@@ -189,17 +82,6 @@ useEffect(() => {
 </TVFocusGuideView>
 ```
 See [focus-management.md](./focus-management.md) for when `nextFocus*` overrides are acceptable.
-
-## Common Pitfalls
-
-| Issue | Solution |
-|-------|----------|
-| Icons without labels | Add `accessibilityLabel` to all icon buttons |
-| Modals not announced | Use `accessibilityViewIsModal`, `accessibilityRole="dialog"` |
-| Dynamic content invisible to screen reader | Use `accessibilityLiveRegion="polite"` |
-| Focus on non-interactive elements | Only set `focusable={true}` on interactive items |
-| Custom components inaccessible | Add `accessible`, role, state, label to all custom components |
-| Visual-only feedback | Pair with `announceForAccessibility()` |
 
 ## Related Skills
 - [a11y-overview.md](./a11y-overview.md) — Accessibility fundamentals for TV

@@ -4,14 +4,15 @@ impact: HIGH
 tags: video, streaming, drm, hls, dash, widevine, fairplay, tv-platforms
 ---
 
-# Video Streaming on TV — What's Different
+# Video Streaming on TV
 
-ABR, HLS/DASH, and DRM work the same on TV as anywhere else — this reference assumes you know them and focuses on the TV-specific constraints that bite: which DRM/protocol pairs each TV platform supports, and the hardware limits of weak TV silicon.
+Use this reference to choose the TV platform playback path and to classify playback failures by protocol, DRM, decoder, or memory pressure.
 
 ## Quick Reference
-- The protocol/DRM pairing is dictated by the **target TV platform**, not by preference — pick per platform (table below)
-- TV hardware constraints are the real difference: limited decoders, mandatory **hardware-backed** DRM security levels, and memory shared with the video buffer
-- Your CDN, encoding, and DRM are usually already chosen — your job is to wire the player and debug the device-specific failures
+- Pick protocol/DRM per target platform; do not assume one stream package covers every TV device
+- Verify hardware DRM level and decoder capability before changing React player controls
+- Tear down unused preview/player instances before starting another stream
+- Keep video buffer sizing conservative on 1-2 GB TV devices
 
 ## Pick DRM/Protocol by TV Platform
 

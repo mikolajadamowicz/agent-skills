@@ -7,45 +7,22 @@ tags: video, debugging, ffmpeg, ffprobe, charles, proxyman, profiling
 # Debugging Video Streams
 
 ## Quick Reference
-- Use FFmpeg/ffprobe to inspect media properties and verify codec compatibility
-- Charles Proxy or Proxyman for network traffic analysis
-- Correlate client-side errors with server-side telemetry
-- React Native Profiler and Hermes Profiler for JS thread bottlenecks
+- Inspect the stream with `ffprobe` before changing React player code
+- Verify manifest requests, DRM license exchange, ABR switches, and decoder support separately
+- Use a proxy for network/license failures; use RN/React tooling for duplicate UI requests or player state desync
+- Correlate client-side player errors with server-side CDN/license telemetry
 
-## FFmpeg for Media Analysis
+## Playback Failure Layers
 
-Indispensable for diagnosing playback issues:
-- **ffprobe** — Inspect codecs, bitrates, resolutions for TV device compatibility
-- **Transcoding tests** — Convert streams to HLS/DASH formats
-- **Bandwidth simulation** — Simulate throttling to identify playback bottlenecks
-- **mediastreamvalidator** (Apple) — Simulates HLS session to verify spec compliance
+1. **Media package** — Use `ffprobe` for codec, bitrate, resolution, audio tracks, subtitles, and container details.
+2. **Manifest validity** — Use platform validators where available, such as `mediastreamvalidator` for Apple HLS.
+3. **Network path** — Inspect manifest, segment, and license requests with Charles or Proxyman.
+4. **DRM/license** — Verify license URL, headers, entitlement token, and hardware security-level failures before changing UI code.
+5. **React/player state** — Use Rozenite, React Native DevTools, or app logs for duplicate play requests, hidden controls, stale state, or JS-generated manifest URL changes.
 
 ## Network Traffic Analysis
 
-Use a proxy (Charles or Proxyman) to inspect manifest requests, verify the DRM license exchange, and watch adaptive-bitrate switches. Both require installing their CA certificate on the simulator/emulator/device to decrypt HTTPS — see the summary table below.
-
-### Rozenite
-Chrome DevTools plugin with network inspection tab for React Native apps.
-
-## Performance Monitoring
-
-- **React Native Profiler** — Track UI jank
-- **Hermes Profiler** — JS thread bottlenecks
-- **Custom metrics** — Playback startup time, frame drops
-- **Analytics platforms** — Firebase Performance, Datadog
-- **Server-side correlation** — AWS CloudFront logs, Mux Data
-
-### Debugging Tools Summary
-
-| Tool | Purpose |
-|------|---------|
-| FFmpeg/ffprobe | Media file inspection, transcoding |
-| mediastreamvalidator | HLS spec validation (Apple) |
-| Charles Proxy | HTTPS traffic inspection |
-| Proxyman | Modern network debugging for Mac |
-| Wireshark | Low-level packet capture |
-| React Native Profiler | UI performance |
-| Hermes Profiler | JS thread analysis |
+Install the proxy CA certificate on the simulator, emulator, or device before expecting HTTPS manifests or license requests to decrypt.
 
 ## Related Skills
 - [video-streaming.md](./video-streaming.md) — Streaming architecture

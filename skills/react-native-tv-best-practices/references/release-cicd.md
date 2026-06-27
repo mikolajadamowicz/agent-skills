@@ -10,24 +10,24 @@ In TV development, a simple "build and test" pipeline explodes in complexity. Ev
 
 ## Quick Reference
 - TV CI/CD = mobile pipeline × 6+ platforms × multiple device SKUs
-- **Fail fast, fail cheap** — shift E2E tests to faster integration tests
-- **Build fingerprinting** — skip native builds when only JS changed (saves 50%+ pipeline time)
+- Run static, unit, and integration checks before device-heavy E2E
+- **Build fingerprinting** — skip native builds when only JS changed
 - **Diff-based triggers** — only build platforms affected by changes
 - Standard CI caching (node_modules, Gradle, CocoaPods) applies as usual — it just pays off more here because every cache hit is multiplied across N platform targets
 
 ## The Multiplication Problem
 
-Mobile: install → validate → build (iOS, Android) → bundle → E2E = ~45 min
+Mobile: install → validate → build (iOS, Android) → bundle → E2E
 
-TV: Same steps × tvOS, Android TV, Fire TV, webOS, Tizen, Vega OS = multi-hour monster. Each native build takes 30+ min, E2E tests 20 min per platform.
+TV: same steps × tvOS, Android TV, Fire TV, webOS, Tizen, Vega OS. Native builds and device E2E dominate runtime, so avoid running them when inputs did not change.
 
-## Fail Fast, Fail Cheap
+## Move Work Out of Device E2E
 
 Shift E2E tests into faster integration tests using RNTL:
 - Abstract platform-specific quirks (D-pad keycodes)
-- ~80% of test logic runs at integration layer
-- Single set of integration tests runs identically across platforms
-- Dramatically faster feedback than device-based tests
+- Cover JS-owned state transitions before launching devices
+- Keep device E2E for native focus-engine behavior, launch, routing, playback startup, and platform packaging
+- Share integration scenarios across platforms, then run platform-specific E2E only for behavior the JS layer cannot prove
 
 ## Build Fingerprinting
 
@@ -45,8 +45,6 @@ fi
 ```
 
 **Sources included:** `ios/Podfile`, `android/build.gradle`, `app.json`, `package.json`
-
-Typically reduces pipeline duration by **50% or more**.
 
 ## Diff-Based Triggers
 

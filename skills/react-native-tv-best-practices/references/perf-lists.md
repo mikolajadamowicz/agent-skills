@@ -9,10 +9,10 @@ tags: lists, grids, virtualization, flashlist, flatlist, tv
 TV UIs are grids of lists inside lists. Home screens have 10-15 rows with 10-20 items each. Without virtualization, your app will be unusable on TV hardware.
 
 ## Quick Reference
-- **Always virtualize** — Use FlashList or RecyclerListView, not ScrollView
-- FlashList is faster and more memory-efficient than FlatList for large datasets
-- Keep list items lightweight — avoid deep nesting, heavy shadows/gradients
-- Memoize list items; preload images for next row in background
+- **Always virtualize large feeds** — Use FlatList/VirtualizedList, FlashList, or RecyclerListView instead of mounting every poster
+- Keep poster rows lightweight; heavy shadows/gradients compound across dozens of focused cards
+- Preload only the next likely row/screen; aggressive poster prefetch can trigger TV memory kills
+- On `react-native-tvos`, use `additionalRenderRegions` for critical ranges that must stay mounted during focus navigation
 - Render hero row outside the virtualized list
 
 ## Why It's Worse on TV
@@ -41,36 +41,33 @@ Every item in every row exists in memory all the time.
 ```
 Only a "window" of items exists in memory at any time.
 
-## FlatList Optimization Props
+## React Native TV VirtualizedList
 
-If you must use FlatList, use all optimization props:
+`react-native-tvos` wraps `VirtualizedList` contents with TV focus helpers and adds `additionalRenderRegions`:
 
-| Prop | Purpose |
-|------|---------|
-| `windowSize` | Smaller = less memory, more re-renders; larger = smoother scroll, more memory |
-| `initialNumToRender` | Fill the screen but not much bigger |
-| `getItemLayout` | Skip runtime measurement if items are same size |
-| `maxToRenderPerBatch` | Control how many items render per batch |
-| `removeClippedSubviews` | Remove off-screen items from native view hierarchy |
+```jsx
+<FlatList
+  data={rows}
+  renderItem={renderRow}
+  additionalRenderRegions={[{ first: 0, last: 1 }]}
+/>
+```
 
-## Best Practices
+Use `additionalRenderRegions` sparingly for critical ranges that must not blank out during D-pad navigation, such as the current row plus an adjacent row. These regions are still a memory tradeoff.
 
-1. **Virtualize your lists** — FlashList or RecyclerListView for horizontal and vertical lists. Avoid FlatList with huge data on older devices.
+## TV-Specific Checks
 
-2. **Preload smartly** — Prefetch images for next screen/row in background. Keep preloads small — balance speed with memory pressure.
+1. **Virtualize nested rows** — TV home screens often have many horizontal rows inside a vertical feed. Avoid keeping every poster mounted.
 
-3. **Keep items lightweight** — Avoid deeply nested views with heavy shadows/gradients. These add GPU overhead.
+2. **Preload conservatively** — Prefetch images for the next likely screen or row, then verify memory while video is mounted.
 
-4. **Memoize list items** — So they don't re-render unless data changes:
-   ```jsx
-   const Card = React.memo(({ poster, title }) => (
-     <View><Image source={poster} /><Text>{title}</Text></View>
-   ));
-   ```
+3. **Keep focus work local** — Moving focus across one row should not re-render unrelated rows.
 
-5. **Defer non-critical work** — If fetching additional metadata (ratings, trailers), load after row is visible or focused.
+4. **Measure fast remote repeats** — Users can hold a direction and traverse rows faster than mobile swipe assumptions.
 
-6. **Hero row outside list** — Render the hero row outside the virtualized list. This avoids recalculating its layout during scroll (saves several ms per frame).
+5. **Defer rich metadata** — Load ratings, trailer previews, and entitlement badges after the row is visible or focused.
+
+6. **Hero row outside list** — Render the hero row outside the virtualized list to avoid recalculating its layout during row scroll.
 
 ## Platform Quirks
 

@@ -6,7 +6,7 @@ tags: accessibility, checklist, screen-reader, captions, focus, tv
 
 # Accessibility Checklist for TV Apps
 
-Complete pre-launch checklist. Use the "move-left approach" — integrate accessibility from the start of development.
+Pre-launch checklist for remote-only navigation, TV screen readers, captions, and focus-visible UI.
 
 ## 1. Navigation & Focus Management
 - [ ] All interactive elements reachable via D-pad or remote
@@ -56,8 +56,8 @@ Complete pre-launch checklist. Use the "move-left approach" — integrate access
 - [ ] All icons (heart, star, thumb) have text equivalents
 
 ## 8. Testing & Platform-Specific
-- [ ] Tested on real devices, not just emulators
-- [ ] Tested with platform screen readers (TalkBack, VoiceOver, VoiceView)
+- [ ] Agent smoke-tested after loading the `agent-device` skill and reading `agent-device help workflow`; verified exposed labels, roles, states, focus, and modal focus behavior
+- [ ] Manually tested spoken output on platform screen readers (TalkBack, VoiceOver, VoiceView) before release
 - [ ] Reviewed against platform accessibility guidelines (tvOS HIG, Android TV UI)
 
 ## 9. Settings & User Control
@@ -76,10 +76,9 @@ Complete pre-launch checklist. Use the "move-left approach" — integrate access
 
 | Tool | Type | Notes |
 |------|------|-------|
+| agent-device | Agent-run | Load the `agent-device` skill and read `agent-device help workflow`, then inspect accessibility tree, focused elements, labels, roles, states, and modal focus behavior |
 | TalkBack | Manual | Android TV, Fire TV |
 | VoiceOver | Manual | Apple TV |
-| eslint-plugin-jsx-a11y | Static analysis | Best for web targets |
-| axe-core + Detox | Runtime | Experimental for mobile/TV |
 | React Native Testing Library | Integration | Test accessibility props/labels |
 | Accessibility Inspector | Manual | Xcode (tvOS) |
 

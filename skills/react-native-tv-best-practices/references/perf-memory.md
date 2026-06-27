@@ -11,7 +11,7 @@ On TVs, you're sharing RAM with the OS, video decoder, DRM, audio buffers, and e
 ## Quick Reference
 - Many devices have 1-1.5 GB total — your app might only get 300-500 MB
 - 4K video streams eat 100-200 MB just for decoded frames
-- Image optimization is the #1 memory lever
+- Poster/backdrop caches are the biggest UI-side memory lever
 - Smart TVs aggressively reclaim memory from your app
 
 ## Symptoms of Memory Pressure
@@ -37,27 +37,21 @@ Without cache control, changing `posterUrl` holds multiple decoded bitmaps until
 ```
 Or use `react-native-fast-image` for cache control.
 
-### Image Best Practices
-- **Pre-scale on server** to match actual on-screen size
-- **Use WebP/AVIF** for posters, JPEG for large backdrops
-- Avoid decoding a 4K asset for a 200px thumbnail — wasted RAM
-- Use memory-aware caching libraries that evict under pressure
-
 ## List Item Memory
 
 Even with virtualization, if row components keep large objects in state (full metadata blobs), you're holding memory hostage.
 
 **Better:** Store only IDs in list item state, fetch full details on demand.
 
-## Best Practices
+## TV-Specific Checks
 
-1. **Optimize images** — Pre-scale server-side, use efficient formats, match display dimensions.
+1. **Match asset size to display size** — A decoded 4K backdrop for a small thumbnail wastes the same memory as a visible full-screen asset.
 
-2. **Release what you're not using** — Null out refs for large objects on unmount. Stop/clean up animations when leaving screen.
+2. **Measure with video mounted** — UI memory that looks fine without playback can fail once decoded frames and DRM buffers exist.
 
-3. **Mind your caches** — Control image caching strategy (`force-cache` vs `reload`). Use memory-aware libraries.
+3. **Keep cache pressure visible** — Watch for poster eviction/re-download loops during fast row navigation.
 
-4. **Watch JS object lifetimes** — Avoid keeping entire Redux/Zustand states in memory. Use selectors to keep component subscriptions lean.
+4. **Avoid large list item state** — Keep IDs in rows; fetch full metadata on demand.
 
 5. **Use native profiling tools:**
    - Android TV/Fire TV: Android Studio Profiler → Memory tab

@@ -1,91 +1,41 @@
 ---
 title: Testing Strategy for React Native TV Apps
 impact: MEDIUM
-tags: testing, integration-tests, trophy-approach, rntl, focus, tv
+tags: testing, integration-tests, rntl, focus, remote-input, tv
 ---
 
 # Testing Strategy for React Native TV Apps
 
-Testing TV apps requires a thoughtful approach that considers focus management, device fragmentation, remote control interaction, and performance constraints.
+TV testing should prove the remote-controlled paths that break differently from mobile: focus order, Back/Menu behavior, player controls, low-memory carousels, and platform packaging.
 
 ## Quick Reference
-- Use the **trophy approach** — emphasize integration tests over unit tests
-- Integration tests provide best effect-per-effort ratio for TV apps
-- Shift E2E tests into faster integration tests using RNTL where possible
-- ~80% of test logic can run at integration layer before reaching a device
-- Validate on real hardware for device-specific behavior — emulators can't replicate overscan, input latency, or color profiles (emulators are fine for most integration/E2E flows; see [test-e2e.md](./test-e2e.md))
+- Use integration tests for JS-owned focus state, player-control state, and remote event handlers
+- Use E2E tests for native focus engine behavior, app launch, routing, playback startup, and Back/Menu behavior
+- For agent-run accessibility smoke, load the `agent-device` skill and read `agent-device help workflow`, then inspect labels, roles, states, and focused elements from the accessibility tree
+- Use real hardware for overscan, remote latency, memory pressure, video decode, DRM, and display/color checks
+- Keep emulators/simulators for fast route, focus, and smoke coverage; do not treat them as final device validation
+- Reuse the same user flows for performance baselines where possible
 
-## Trophy Testing Approach (Kent C. Dodds)
+## JS Integration Tests
 
-1. **Static analysis** — TypeScript, ESLint covering type errors across project
-2. **Unit tests** — Important but not primary focus
-3. **Integration tests** — **Primary focus** — best balance of speed and coverage
-4. **E2E tests** — Sparingly, on real devices/emulators
-
-## Essential Testing Tools
-
-| Tool | Purpose |
-|------|---------|
-| Jest / Vitest | Test runner |
-| React Native Testing Library | UI/interaction testing |
-| Reassure | Performance regression testing |
-| Appium | E2E testing on TV platforms |
-| WebdriverIO | Test runner for Appium |
-
-## Integration Test Best Practices
-
-### Use Real State
-Don't mock state management. Capture real state from your running app and apply it:
+Prefer a saved or generated app state that includes rows, entitlement state, player state, and modal state:
 ```jsx
 const snapshot = require('my-state.json');
 const { Wrapper } = loadStateFromSnapshot(snapshot);
 render(<Wrapper><VideoPlayer /></Wrapper>);
 ```
 
-### ARRANGE / ACT / ASSERT Pattern
-```jsx
-describe('Video Player Controls', () => {
-  it('shows controls when OK pressed', () => {
-    // ARRANGE
-    mockTVDeviceEnvironment();
-    render(<Wrapper><VideoPlayer /></Wrapper>);
-    // ACT — tvRemote is the project helper built in test-javascript.md;
-    // RNTL has no TV-remote API, so D-pad/OK presses go through it.
-    tvRemote.select({ elementToSelect: screen.getByLabelText('Play') });
-    // ASSERT
-    expect(screen.getByTestId('player-controls-modal')).toBeVisible();
-  });
-});
-```
+- Mock native player/focus modules when JS tests cannot load them
+- Mock timers for auto-hide controls, debounce, and "are you still watching" flows
+- Avoid mocking app state in tests that are meant to prove focus restoration or navigation paths
 
-### Minimize Mocking
-- Mock native modules when unavoidable
-- Mock timers for time-dependent behavior (`jest.useFakeTimers()`)
-- Never mock state management in integration tests
+See [test-javascript.md](./test-javascript.md) for the local `tvRemote` helper pattern.
 
-## TV-Specific Testing Considerations
+## CI Scope
 
-| Test Type | TV Considerations |
-|-----------|------------------|
-| Unit | Test focus management helpers, mock TV APIs |
-| Integration | Test focus movement, remote control inputs, player controls |
-| E2E | Test on real devices/emulators, simulate remote interactions |
-| Accessibility | Test with platform screen readers, verify labels/roles |
-| Performance | Measure rendering times, compare against baseline |
-
-## CI Integration
-
-- **Pre-push hooks** — Run fast integration tests and static checks
-- **CI pipeline** — Full suite on PR: unit + integration + performance + E2E
-- **Selective execution** — Only run tests affected by changes
-- **Parallelization** — Run tests concurrently across devices/environments
-
-## Production Monitoring
-
-Testing doesn't end at deploy:
-- **Real User Monitoring (RUM)** — Sentry, New Relic, DataDog
-- Monitor errors, crashes, performance across device diversity
-- React to issues as they happen with detailed crash reports
+- PR checks: static checks, unit tests, integration tests, and changed-platform build checks
+- Nightly/release checks: E2E on representative TV devices, playback startup, `agent-device` accessibility-tree smoke, memory-sensitive carousel flows
+- Device matrix: at least one Apple TV target, one Android TV/Fire TV target, and any required Vega/Tizen/webOS target
 
 ## Related Skills
 - [test-javascript.md](./test-javascript.md) — JS test setup and tvRemote helpers

@@ -9,14 +9,14 @@ tags: testing, rntl, tvremote, focus, hardware-key-events, tv
 TV tests use the same React Native Testing Library but need custom helpers for remote-controlled navigation — you can't emulate D-pad with click events.
 
 ## Quick Reference
-- Create a `tvRemote` helper to emit platform-specific hardware key events
-- Focus movement must be explicitly specified (focus engine is native, not testable in JS)
-- Platform differences: tvOS emits different event sequences than Android TV
-- No reusable library exists yet — build helpers for your use case
+- Create a local `tvRemote` helper for focus/blur/press events owned by JS
+- Focus movement must be explicit; RNTL does not run the native TV focus engine
+- Test native focus-engine behavior in E2E, not in JS-only tests
+- Add platform-specific event-emitter coverage only when app code subscribes to those events
 
 ## Example Test
 
-`tvRemote` is a project-specific helper (built in the next section), not a library export.
+`tvRemote` is a project-specific helper, not a library export.
 
 ```jsx
 import { render, screen, fireEvent } from '@testing-library/react-native';
@@ -39,87 +39,65 @@ it('navigates and selects the play button', () => {
 
 ## Building the tvRemote Helper
 
-The snippets below are an illustrative scaffold for your own test utility. The `prepare*Event`/`emit*Event` functions are project-specific — define them to match the event shape your native focus layer dispatches. `PlatformSwitch` is a small local helper (shown below), not a React Native export.
-
-> **Package/version caveat:** `Platform.isTVOS` exists only on **react-native-tvos** (RN 0.76+, Apple TV / Android TV). On **Amazon Vega OS** (RN 0.72, `react-native-kepler`) it does **not** exist — Vega exposes `Platform.isTV` and `Platform.OS === 'kepler'`. The helper below is therefore tvOS-specific; don't copy `Platform.isTVOS` into a Vega project.
+Start with the smallest helper that matches what React Native Testing Library can actually test: JS focus/blur handlers and press handlers. Keep native focus-engine assertions in E2E.
 
 ```jsx
-import { act, fireEvent } from '@testing-library/react-native';
+import { fireEvent } from '@testing-library/react-native';
+
+export const tvRemote = {
+  move({ elementToBlur, elementToFocus } = {}) {
+    if (elementToBlur) {
+      fireEvent(elementToBlur, 'blur');
+    }
+    if (elementToFocus) {
+      fireEvent(elementToFocus, 'focus');
+    }
+  },
+  right(args) {
+    this.move(args);
+  },
+  left(args) {
+    this.move(args);
+  },
+  up(args) {
+    this.move(args);
+  },
+  down(args) {
+    this.move(args);
+  },
+  select({ elementToSelect } = {}) {
+    if (!elementToSelect) return;
+    fireEvent(elementToSelect, 'pressIn');
+    fireEvent.press(elementToSelect);
+    fireEvent(elementToSelect, 'pressOut');
+  },
+};
+```
+
+## Testing Native Remote Event Subscribers
+
+If app code subscribes to `TVEventHandler`, `useTVEventHandler`, `DeviceEventEmitter`, or a Vega/Kepler equivalent, add a second helper that emits the event payload shape used by that app. Keep this helper local because payload names differ by platform and RN fork.
+
+```jsx
+import { act } from '@testing-library/react-native';
 import { DeviceEventEmitter, Platform } from 'react-native';
 
-// Local helper (react-native-tvos only): react-native-tvos reports
-// Platform.OS === 'ios' on tvOS, so branch on Platform.isTVOS to pick a
-// tvOS vs. Android TV event sequence. On Vega (react-native-kepler, RN 0.72)
-// isTVOS is unavailable — use Platform.isTV / Platform.OS === 'kepler' instead.
-const PlatformSwitch = {
-  select: (spec) => (Platform.isTVOS ? spec.tvos : spec.default),
-};
-```
+export function emitRemoteEvent(eventType) {
+  const payload = Platform.isTVOS
+    ? { eventType }
+    : { eventType, eventKeyAction: 1 };
 
-### Hardware Key Event Emitter
-```jsx
-function emitHWKeyEvent(hwEventPayload) {
   act(() => {
-    DeviceEventEmitter.emit('onHWKeyEvent', hwEventPayload);
+    DeviceEventEmitter.emit('onHWKeyEvent', payload);
   });
 }
 ```
 
-### Platform-Specific Event Creation
-```jsx
-const createEvent = ({ tag, action, type }) => {
-  return PlatformSwitch.select({
-    tvos: { eventType: type, body: {} },
-    default: { eventType: type, eventKeyAction: action, tag, target: tag },
-  });
-};
-```
-
-### Directional Press Helpers
-```jsx
-function emitDirectionalSinglePressEvent(keyCode, params) {
-  const emitPressDown = preparePressDownEvent({ keyCode });
-  const emitPressUp = preparePressUpEvent({ keyCode });
-
-  PlatformSwitch.select({
-    tvos: [emitFocusEvent, emitBlurEvent, emitPressUp],
-    default: [emitPressDown, emitBlurEvent, emitFocusEvent, emitPressUp],
-  }).forEach((emitEvent) => act(() => emitEvent(params)));
-}
-```
-
-> Note: tvOS emits a different sequence of events compared to Android TV for the same input.
-
-### The tvRemote API
-```jsx
-const tvRemote = {
-  right: ({ elementToFocus, elementToBlur, tag } = {}) => {
-    emitDirectionalSinglePressEvent('right', {
-      elementToFocus, elementToBlur, tag,
-    });
-  },
-  select: ({ elementToSelect } = {}) => {
-    const emitPressDown = preparePressDownEvent({ keyCode: 'select' });
-    const emitPressUp = preparePressUpEvent({ keyCode: 'select' });
-    if (elementToSelect && Platform.isTVOS) {
-      fireEvent(elementToSelect, 'pressIn');
-      fireEvent.press(elementToSelect);
-    }
-    PlatformSwitch.select({
-      tvos: [emitPressUp],
-      default: [emitPressDown, emitPressUp],
-    }).forEach((emitEvent) => act(() => emitEvent()));
-    if (elementToSelect && !Platform.isTVOS) {
-      fireEvent(elementToSelect, 'pressIn');
-      fireEvent.press(elementToSelect);
-    }
-  },
-};
-```
+> `Platform.isTVOS` is specific to `react-native-tvos`. For Vega/Kepler, use that stack's documented platform flags and event payloads instead of copying this branch.
 
 ## Why Focus Must Be Explicit
 
-The native focus engine (tvOS/Android TV) handles actual focus movement. In JavaScript tests, there's no way to trigger real focus navigation — you must specify `elementToFocus` and `elementToBlur` manually.
+The native focus engine handles actual focus movement. In JavaScript tests, there is no real focus search, so specify `elementToFocus` and `elementToBlur` manually. Use E2E to validate that a physical remote press moves focus to the expected element.
 
 ## Performance Testing with Reassure
 
