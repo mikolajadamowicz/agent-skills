@@ -129,6 +129,29 @@ based on these skills. Include code examples.
 """
 ```
 
+## Gemini CLI
+
+### Install (native skills)
+
+Gemini's installer discovers `SKILL.md` only at a repository's root or **one** directory deep. Because this is a multi-skill monorepo (`skills/<name>/SKILL.md` is two deep), a bare `gemini skills install <url>` reports "No valid skills found." Point `--path` at the `skills/` directory so every skill sits one level deep — one command installs them all:
+
+```bash
+# All skills
+gemini skills install https://github.com/callstackincubator/agent-skills.git --path skills
+
+# A single skill
+gemini skills install https://github.com/callstackincubator/agent-skills.git --path skills/react-native-best-practices
+
+# Into the current project instead of globally
+gemini skills install https://github.com/callstackincubator/agent-skills.git --path skills --scope workspace
+```
+
+Manage installed skills with `/skills list`, `/skills enable <name>`, `/skills disable <name>`, and `/skills reload`.
+
+### Workspace discovery (no install)
+
+If you clone this repo and work inside it, Gemini also auto-discovers skills placed under `.gemini/skills/` or the interoperable `.agents/skills/` alias. Copy or symlink the skills you want into one of those directories to make them available without an install step.
+
 ## Windsurf / Codeium
 
 ### Rules

@@ -129,16 +129,22 @@ git clone https://github.com/callstackincubator/agent-skills.git ~/.cursor/skill
 
 ##### Gemini CLI
 
-**Install from repository:**
+This is a multi-skill monorepo — every skill lives at `skills/<name>/SKILL.md`. Gemini's installer only discovers a `SKILL.md` at the repository root or **one** directory deep, so a bare `gemini skills install <url>` finds nothing. Point `--path` at the `skills/` directory and a single command installs **all** skills at once:
 
 ```bash
-gemini skills install https://github.com/callstackincubator/agent-skills.git
+gemini skills install https://github.com/callstackincubator/agent-skills.git --path skills
 ```
 
-**Or install to workspace:**
+**Install a single skill** by pointing `--path` at its folder:
 
 ```bash
-gemini skills install https://github.com/callstackincubator/agent-skills.git --scope workspace
+gemini skills install https://github.com/callstackincubator/agent-skills.git --path skills/react-native-best-practices
+```
+
+**Install to the current project** (`.gemini/skills/`) instead of globally (`~/.gemini/skills/`) by adding `--scope workspace`:
+
+```bash
+gemini skills install https://github.com/callstackincubator/agent-skills.git --path skills --scope workspace
 ```
 
 **Management commands:**
