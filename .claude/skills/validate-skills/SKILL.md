@@ -37,7 +37,7 @@ For each skill directory, verify:
 
 > **One-level-deep vs. cross-linking.** The one-level-deep rule targets *progressive-disclosure loading chains* — a reference that can only be discovered by loading another reference first (`SKILL.md` → `a.md` → `b.md`, where `b.md` is not linked from `SKILL.md`). That is a defect: it hides content from the loader.
 >
-> It does **not** forbid *navigational* cross-links. Per [CLAUDE.md](../../../CLAUDE.md), reference files end with a "Related Skills" footer linking sibling references, and this is required. A cross-link is fine as long as both endpoints are also reachable directly from `SKILL.md`. Only flag a reference that is reachable *exclusively* through another reference.
+> It does **not** forbid *navigational* cross-links. Per [AGENTS.md](../../../AGENTS.md), reference files end with a "Related Skills" footer linking sibling references, and this is required. A cross-link is fine as long as both endpoints are also reachable directly from `SKILL.md`. Only flag a reference that is reachable *exclusively* through another reference.
 
 ## How to Run
 
